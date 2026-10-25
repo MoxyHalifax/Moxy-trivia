@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Moxy Halifax Trivia</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <!-- Welcome screen -->
+    <section id="welcome" class="screen active">
+      <div class="logo">MOXY<span>HALIFAX</span></div>
+      <h1>Think you know Halifax?</h1>
+      <p>10 quick questions. Score 8 or more and the front desk has a prize with your name on it.</p>
+      <label for="room" class="room-label">Your room number</label>
+      <input id="room" inputmode="numeric" autocomplete="off" placeholder="e.g. 412">
+      <p id="room-error" class="error hidden">Pop in your room number first.</p>
+      <button id="start-btn">Let's play</button>
+      <p class="small" id="plays-left"></p>
+    </section>
+
+    <!-- Question screen -->
+    <section id="quiz" class="screen">
+      <div class="progress" id="progress"></div>
+      <h2 id="question"></h2>
+      <div id="choices"></div>
+      <p id="feedback"></p>
+      <button id="next-btn" class="hidden">Next</button>
+    </section>
+
+    <!-- Final score screen -->
+    <section id="result" class="screen">
+      <h1 id="result-title"></h1>
+      <div class="score" id="score"></div>
+      <p id="result-text"></p>
+      <div id="prize" class="prize hidden">
+        <p>Show this screen at the front desk to claim your prize</p>
+        <div class="code" id="prize-code"></div>
+        <p class="small" id="prize-room"></p>
+      </div>
+      <button id="again-btn">Play again</button>
+    </section>
+
+    <!-- Shown when a guest has no plays left or already won -->
+    <section id="locked" class="screen">
+      <h1 id="locked-title"></h1>
+      <p id="locked-text"></p>
+    </section>
+  </main>
+
+  <!-- Confetti for winners -->
+  <canvas id="confetti"></canvas>
+
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

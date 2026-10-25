@@ -1,0 +1,107 @@
+:root {
+  --pink: #e6007e;
+  --black: #111;
+  --white: #fff;
+  --green: #1db954;
+  --red: #e63946;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--black);
+  color: var(--white);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+main { width: 100%; max-width: 480px; padding: 24px 16px; }
+
+/* Only the active screen is shown */
+.screen { display: none; text-align: center; }
+.screen.active { display: block; }
+.hidden { display: none; }
+
+.logo {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  margin: 40px 0 24px;
+}
+.logo span {
+  display: block;
+  font-size: 16px;
+  letter-spacing: 8px;
+  color: var(--pink);
+}
+
+h1 { font-size: 28px; margin: 0 0 12px; }
+h2 { font-size: 22px; margin: 16px 0 24px; line-height: 1.3; }
+p { font-size: 17px; line-height: 1.5; color: #ddd; }
+
+button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 16px;
+  font-size: 18px;
+  font-weight: 700;
+  border: none;
+  border-radius: 999px;
+  background: var(--pink);
+  color: var(--white);
+  cursor: pointer;
+}
+button:active { transform: scale(0.98); }
+
+.progress { color: var(--pink); font-weight: 700; letter-spacing: 2px; margin-top: 16px; }
+
+/* Answer choices */
+#choices button {
+  margin-top: 12px;
+  background: transparent;
+  border: 2px solid var(--white);
+  border-radius: 14px;
+  font-weight: 500;
+  text-align: left;
+}
+#choices button.correct { background: var(--green); border-color: var(--green); }
+#choices button.wrong { background: var(--red); border-color: var(--red); }
+#choices button:disabled { cursor: default; }
+
+#feedback { font-weight: 700; min-height: 24px; color: var(--white); }
+
+.score { font-size: 72px; font-weight: 900; color: var(--pink); margin: 16px 0; }
+
+.prize {
+  margin-top: 20px;
+  padding: 20px;
+  border: 3px dashed var(--pink);
+  border-radius: 16px;
+}
+.prize .code { font-size: 32px; font-weight: 900; letter-spacing: 3px; }
+
+.room-label { display: block; margin-top: 24px; font-weight: 700; }
+#room {
+  width: 100%;
+  margin-top: 8px;
+  padding: 14px;
+  font-size: 20px;
+  text-align: center;
+  border: 2px solid var(--white);
+  border-radius: 14px;
+  background: transparent;
+  color: var(--white);
+}
+.error { color: var(--red); font-weight: 700; margin: 8px 0 0; }
+.small { font-size: 15px; color: #bbb; }
+
+#confetti {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
