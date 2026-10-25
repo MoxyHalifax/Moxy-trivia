@@ -2,6 +2,12 @@
 let gameQuestions = [];
 let current = 0;
 let score = 0;
+let timerId = null;
+let endsAt = 0;
+let gameOver = false;
+
+// How long to show "Nailed it!" etc. before moving to the next question
+const FEEDBACK_MS = 700;
 
 // Grab the parts of the page we need to change
 const screens = document.querySelectorAll(".screen");
@@ -9,7 +15,8 @@ const progressEl = document.getElementById("progress");
 const questionEl = document.getElementById("question");
 const choicesEl = document.getElementById("choices");
 const feedbackEl = document.getElementById("feedback");
-const nextBtn = document.getElementById("next-btn");
+const timerEl = document.getElementById("timer");
+const timerFill = document.getElementById("timer-fill");
 
 // --- Play limits ---
 // We remember plays and wins on the guest's phone.
@@ -130,8 +137,37 @@ function startGame() {
   gameQuestions = buildGame();
   current = 0;
   score = 0;
+  gameOver = false;
   showScreen("quiz");
   showQuestion();
+  startTimer();
+}
+
+// --- Timer ---
+// One clock for the whole game, so there's no time to look answers up.
+function startTimer() {
+  endsAt = Date.now() + TIME_LIMIT_SECONDS * 1000;
+  clearInterval(timerId);
+  timerId = setInterval(updateTimer, 100);
+  updateTimer();
+}
+
+function updateTimer() {
+  const msLeft = Math.max(0, endsAt - Date.now());
+  const secondsLeft = Math.ceil(msLeft / 1000);
+  const low = secondsLeft <= 10;
+  timerEl.textContent = `0:${String(secondsLeft).padStart(2, "0")}`.replace("0:60", "1:00");
+  timerEl.classList.toggle("low", low);
+  timerFill.parentElement.classList.toggle("low", low);
+  timerFill.style.width = `${(msLeft / (TIME_LIMIT_SECONDS * 1000)) * 100}%`;
+  if (msLeft === 0) endGame(true);
+}
+
+function endGame(timeUp) {
+  if (gameOver) return;
+  gameOver = true;
+  clearInterval(timerId);
+  showResult(timeUp);
 }
 
 function showQuestion() {
@@ -139,7 +175,6 @@ function showQuestion() {
   progressEl.textContent = `QUESTION ${current + 1} OF ${gameQuestions.length}`;
   questionEl.textContent = q.question;
   feedbackEl.textContent = "";
-  nextBtn.classList.add("hidden");
   choicesEl.innerHTML = "";
 
   q.choices.forEach((choice, i) => {
@@ -151,6 +186,7 @@ function showQuestion() {
 }
 
 function checkAnswer(picked) {
+  if (gameOver) return;
   const q = gameQuestions[current];
   const buttons = choicesEl.querySelectorAll("button");
 
@@ -166,20 +202,21 @@ function checkAnswer(picked) {
     feedbackEl.textContent = pickOne(WRONG_LINES);
   }
 
-  nextBtn.textContent = current === gameQuestions.length - 1 ? "See my score" : "Next question";
-  nextBtn.classList.remove("hidden");
+  // Move on by itself so the clock keeps the pressure on
+  setTimeout(nextQuestion, FEEDBACK_MS);
 }
 
 function nextQuestion() {
+  if (gameOver) return;
   current++;
   if (current < gameQuestions.length) {
     showQuestion();
   } else {
-    showResult();
+    endGame(false);
   }
 }
 
-function showResult() {
+function showResult(timeUp) {
   const won = score >= WIN_SCORE;
   if (won) {
     stay.won = true;
@@ -189,7 +226,8 @@ function showResult() {
 
   const left = playsLeft();
   document.getElementById("score").textContent = `${score} / ${gameQuestions.length}`;
-  document.getElementById("result-title").textContent = won ? "You've got Moxy!" : "So close!";
+  document.getElementById("result-title").textContent =
+    won ? "You've got Moxy!" : timeUp ? "Time's up!" : "So close!";
   document.getElementById("result-text").textContent = won
     ? "Halifax trivia royalty. Your prize is waiting."
     : left > 0
@@ -247,7 +285,6 @@ function launchConfetti() {
 }
 
 document.getElementById("start-btn").addEventListener("click", startGame);
-nextBtn.addEventListener("click", nextQuestion);
 document.getElementById("again-btn").addEventListener("click", startGame);
 
 showWelcome();

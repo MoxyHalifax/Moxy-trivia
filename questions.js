@@ -158,6 +158,9 @@ const QUESTIONS = [
 // Questions per game, score needed to win (8 out of 10 = 80%),
 // and the code to show the front desk.
 const QUESTIONS_PER_GAME = 10;
+
+// Seconds for the whole game. When time runs out, unanswered questions count as wrong.
+const TIME_LIMIT_SECONDS = 60;
 const WIN_SCORE = 8;
 const PRIZE_CODE = "MOXY-WIN";
 

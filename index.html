@@ -12,7 +12,7 @@
     <section id="welcome" class="screen active">
       <div class="logo">MOXY<span>HALIFAX</span></div>
       <h1>Think you know Halifax?</h1>
-      <p>10 quick questions. Score 8 or more and the front desk has a prize with your name on it.</p>
+      <p>10 questions. 60 seconds. Score 8 or more and the front desk has a prize with your name on it.</p>
       <label for="room" class="room-label">Your room number</label>
       <input id="room" inputmode="numeric" autocomplete="off" placeholder="e.g. 412">
       <p id="room-error" class="error hidden">Pop in your room number first.</p>
@@ -22,11 +22,14 @@
 
     <!-- Question screen -->
     <section id="quiz" class="screen">
-      <div class="progress" id="progress"></div>
+      <div class="quiz-top">
+        <div class="progress" id="progress"></div>
+        <div class="timer" id="timer"></div>
+      </div>
+      <div class="timer-bar"><div id="timer-fill"></div></div>
       <h2 id="question"></h2>
       <div id="choices"></div>
       <p id="feedback"></p>
-      <button id="next-btn" class="hidden">Next</button>
     </section>
 
     <!-- Final score screen -->
