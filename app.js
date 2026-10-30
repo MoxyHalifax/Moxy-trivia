@@ -48,22 +48,6 @@ function saveStay(stay) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(stay)); } catch (e) {}
 }
 
-// TESTING ONLY: opening the link with #reset at the end clears this phone's
-// plays and prize. Remove this block before launch.
-function checkTestReset() {
-  if (location.hash !== "#reset") return false;
-  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-  history.replaceState(null, "", location.pathname + location.search);
-  return true;
-}
-checkTestReset();
-window.addEventListener("hashchange", () => {
-  if (checkTestReset()) {
-    stay = loadStay();
-    showWelcome();
-  }
-});
-
 let stay = loadStay();
 
 function playsLeft() {
