@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Group Quote Optimizer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: inputs left, live answer right; summary first, night-by-night detail below. */
+:root{
+  --bg:#f3f4f6; --panel:#ffffff; --ink:#16202b; --muted:#5d6b7a; --line:#d9dee4;
+  --accent:#0b5d73; --accent-soft:#e3f0f3;
+  --good:#1f7a4a; --good-soft:#e2f3ea; --warn:#9a6200; --warn-soft:#fbf0d9; --bad:#b3261e; --bad-soft:#fbe4e2;
+  --display:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f151b; --panel:#17212a; --ink:#e6ebf0; --muted:#94a3b2; --line:#2a3743;
+  --accent:#5cc2d9; --accent-soft:#16323a;
+  --good:#5fd394; --good-soft:#15301f; --warn:#f2bb55; --warn-soft:#352812; --bad:#ff8a80; --bad-soft:#3a1a18;
+  color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0f151b; --panel:#17212a; --ink:#e6ebf0; --muted:#94a3b2; --line:#2a3743;
+  --accent:#5cc2d9; --accent-soft:#16323a;
+  --good:#5fd394; --good-soft:#15301f; --warn:#f2bb55; --warn-soft:#352812; --bad:#ff8a80; --bad-soft:#3a1a18;
+  color-scheme:dark;}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body)}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 20px 48px;display:grid;gap:20px}
+header{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
+h1{font:700 28px/1.1 var(--display);margin:0;text-wrap:balance;letter-spacing:.2px}
+h2{font:600 13px/1 var(--body);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0}
+.beta{font:600 11px var(--body);color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:99px;margin-left:8px;vertical-align:middle}
+.sub{color:var(--muted);margin:0}
+.grid{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:14px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fields .full{grid-column:1/-1}
+label{display:grid;gap:4px;font-size:12px;color:var(--muted);font-weight:500}
+input{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 9px;width:100%;font-variant-numeric:tabular-nums}
+input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+button{font:inherit;font-weight:600;font-size:13px;border-radius:6px;padding:7px 12px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:var(--panel)}
+button.ghost{background:transparent;color:var(--accent)}
+button.x{border:none;background:none;color:var(--muted);padding:4px 6px;font-size:16px}
+button.x:hover{color:var(--bad)}
+.verdict{display:flex;gap:14px;align-items:center;padding:16px 18px;border-radius:10px;border:1px solid var(--line);border-left:6px solid var(--good);background:var(--good-soft)}
+.verdict.warn{border-left-color:var(--warn);background:var(--warn-soft)}
+.verdict.bad{border-left-color:var(--bad);background:var(--bad-soft)}
+.verdict b{font:700 20px/1.2 var(--display)}
+.verdict p{margin:2px 0 0;color:var(--muted)}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:640px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+.tile span{display:block;font-size:12px;color:var(--muted)}
+.tile strong{display:block;font:700 26px/1.2 var(--display);font-variant-numeric:tabular-nums;margin-top:4px}
+.tile.key strong{color:var(--accent)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:14px}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;text-align:right;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td input{width:68px;padding:5px 7px;text-align:right}
+td.rec{font-weight:600;color:var(--accent)}
+.pill{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px}
+.pill.good{color:var(--good);background:var(--good-soft)}
+.pill.warn{color:var(--warn);background:var(--warn-soft)}
+.pill.bad{color:var(--bad);background:var(--bad-soft)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+textarea{font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px;width:100%;min-height:230px;resize:vertical}
+.note{font-size:12px;color:var(--muted);margin:0}
+@media (prefers-reduced-motion:no-preference){.verdict,.tile strong{transition:background .2s,color .2s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Group Quote Optimizer <span class="beta">BETA</span></h1>
+      <p class="sub">Find the lowest rate that beats the transient business a group would push out, then quote above it.</p>
+    </div>
+  </header>
+
+  <div class="grid">
+    <section class="panel" aria-label="Inputs">
+      <h2>Hotel</h2>
+      <div class="fields">
+        <label class="full" for="hotel">Hotel name<input id="hotel" value="Example Hotel"></label>
+        <label for="cap">Rooms in hotel<input id="cap" type="number" min="1" value="150"></label>
+        <label for="cpor">Cost per room ($)<input id="cpor" type="number" min="0" step="1" value="35"></label>
+        <label for="comm">Commission (%)<input id="comm" type="number" min="0" max="50" step="0.5" value="10"></label>
+        <label for="margin">Ask above floor (%)<input id="margin" type="number" min="0" max="100" step="1" value="15"></label>
+        <label class="full" for="disc">Max group discount off transient (%)<input id="disc" type="number" min="0" max="100" step="1" value="20"></label>
+      </div>
+      <h2>Group</h2>
+      <div class="fields">
+        <label class="full" for="gname">Group name<input id="gname" value="Atlantic Dental Conference"></label>
+        <label for="arr">Arrival<input id="arr" type="date" value="2026-11-19"></label>
+        <label for="anc">Meeting + F&amp;B ($)<input id="anc" type="number" min="0" step="100" value="6000"></label>
+        <label for="ancm">F&amp;B profit margin (%)<input id="ancm" type="number" min="0" max="100" step="1" value="30"></label>
+      </div>
+      <p class="note">Quote = the higher of floor + your ask, or transient ADR less your max discount. Floor rate = room cost + transient profit lost to displacement, minus the group's F&amp;B profit, grossed up for commission.</p>
+    </section>
+
+    <section style="display:grid;gap:16px" aria-label="Results">
+      <div id="verdict" class="verdict"><div><b id="vTitle"></b><p id="vText"></p></div></div>
+      <div class="tiles">
+        <div class="tile key"><span>Quote rate (avg/night)</span><strong id="tRate"></strong></div>
+        <div class="tile"><span>Floor rate (avg)</span><strong id="tFloor"></strong></div>
+        <div class="tile"><span>Room revenue</span><strong id="tRev"></strong></div>
+        <div class="tile"><span>Profit gain vs. no group</span><strong id="tGain"></strong></div>
+      </div>
+
+      <div class="panel">
+        <div class="row"><h2>Night by night</h2><button class="ghost" id="addNight" type="button">+ Add night</button></div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr>
+              <th>Night</th><th>Rooms asked</th><th>Forecast occ %</th><th>Transient ADR</th>
+              <th>Open rooms</th><th>Displaced</th><th>Floor</th><th>Quote</th><th>Status</th><th></th>
+            </tr></thead>
+            <tbody id="nights"></tbody>
+          </table>
+        </div>
+        <p class="note">Open rooms = rooms not already forecast to sell. Displaced = group rooms beyond that, which would have sold to transient guests.</p>
+      </div>
+
+      <div class="panel">
+        <div class="row"><h2>Quote text</h2><button id="copy" type="button">Copy quote</button></div>
+        <textarea id="quote" aria-label="Quote text" readonly></textarea>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const money = (n, d=0) => (n<0?"-$":"$") + Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+let nights = [
+  {rooms:40, occ:62, adr:179},
+  {rooms:60, occ:88, adr:219},
+  {rooms:60, occ:81, adr:209},
+];
+
+function renderRows(){
+  $("nights").innerHTML = nights.map((n,i)=>`
+    <tr>
+      <td id="d${i}"></td>
+      <td><input id="r${i}" type="number" min="0" value="${n.rooms}" aria-label="Rooms night ${i+1}"></td>
+      <td><input id="o${i}" type="number" min="0" max="100" value="${n.occ}" aria-label="Forecast occupancy night ${i+1}"></td>
+      <td><input id="a${i}" type="number" min="0" value="${n.adr}" aria-label="Transient ADR night ${i+1}"></td>
+      <td id="open${i}"></td><td id="disp${i}"></td><td id="fl${i}"></td><td class="rec" id="q${i}"></td><td id="s${i}"></td>
+      <td>${nights.length>1?`<button class="x" type="button" data-del="${i}" aria-label="Remove night ${i+1}">&times;</button>`:""}</td>
+    </tr>`).join("");
+}
+
+function calc(){
+  const v = id => parseFloat($(id).value) || 0;
+  const cap=v("cap"), cpor=v("cpor"), c=Math.min(v("comm"),99)/100, m=v("margin")/100;
+  const disc=v("disc")/100;
+  const ancProfit = v("anc")*v("ancm")/100;
+  nights.forEach((n,i)=>{ n.rooms=v("r"+i); n.occ=v("o"+i); n.adr=v("a"+i); });
+  const totalRN = nights.reduce((s,n)=>s+n.rooms,0) || 1;
+  const arr = $("arr").value ? new Date($("arr").value+"T12:00:00") : null;
+
+  let rev=0, floorRev=0, groupProfit=0, lostProfit=0, red=0, amber=0;
+  const lines=[];
+  nights.forEach((n,i)=>{
+    const sold = Math.round(cap*n.occ/100);
+    const open = Math.max(0, cap-sold);
+    const disp = Math.max(0, n.rooms-open);
+    const lost = disp*Math.max(0,n.adr-cpor);
+    const ancShare = ancProfit*n.rooms/totalRN;
+    const minRate = cpor/(1-c);
+    let floor = n.rooms ? ((lost-ancShare)/n.rooms + cpor)/(1-c) : 0;
+    floor = Math.max(floor, minRate);
+    const quote = floor >= n.adr ? floor : Math.max(Math.min(floor*(1+m), n.adr), n.adr*(1-disc));
+    let st = disp===0 ? ["good","Open"] : floor<n.adr ? ["warn","Tight"] : ["bad","Move date"];
+    if(st[0]==="bad") red++; else if(st[0]==="warn") amber++;
+
+    rev += quote*n.rooms; floorRev += floor*n.rooms;
+    groupProfit += n.rooms*(quote*(1-c)-cpor) + ancShare;
+    lostProfit += lost;
+
+    let label = "Night "+(i+1);
+    if(arr){ const d=new Date(arr); d.setDate(d.getDate()+i);
+      label = d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}); }
+    $("d"+i).textContent=label; $("open"+i).textContent=open; $("disp"+i).textContent=disp;
+    $("fl"+i).textContent=money(floor); $("q"+i).textContent=money(quote);
+    $("s"+i).innerHTML=`<span class="pill ${st[0]}">${st[1]}</span>`;
+    lines.push(`  ${label.padEnd(12)} ${String(n.rooms).padStart(3)} rooms @ ${money(Math.ceil(quote))}`);
+  });
+
+  const avg = rev/totalRN, avgFloor = floorRev/totalRN, gain = groupProfit-lostProfit;
+  $("tRate").textContent=money(avg); $("tFloor").textContent=money(avgFloor);
+  $("tRev").textContent=money(rev); $("tGain").textContent=money(gain);
+
+  const vEl=$("verdict");
+  vEl.className="verdict"+(red?" bad":amber?" warn":"");
+  if(red){
+    $("vTitle").textContent=`Move ${red===1?"1 night":red+" nights"} or cut rooms`;
+    $("vText").textContent="On red nights the group must pay more than transient guests to be worth it. Offer shoulder dates or fewer rooms on those nights.";
+  } else if(amber){
+    $("vTitle").textContent=`Take it at ${money(avg)} average`;
+    $("vText").textContent=`Some nights push out transient guests. Do not go below ${money(avgFloor)} average.`;
+  } else {
+    $("vTitle").textContent=`Take it at ${money(avg)} average`;
+    $("vText").textContent=`No transient guests pushed out. Room to negotiate down to ${money(avgFloor)} if needed.`;
+  }
+
+  const arrTxt = arr ? arr.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}) : "TBD";
+  $("quote").value =
+`${$("hotel").value} | Group Rate Proposal
+Group: ${$("gname").value}
+Arrival: ${arrTxt}  |  ${nights.length} night${nights.length>1?"s":""}  |  ${totalRN} room nights
+
+${lines.join("\n")}
+
+Average rate: ${money(Math.ceil(avg))} per room, per night, plus tax.
+Estimated room total: ${money(Math.ceil(rev))}
+Rates held for 14 days. Subject to availability at signing.`;
+}
+
+renderRows(); calc();
+document.addEventListener("input", calc);
+$("addNight").addEventListener("click", ()=>{
+  const last = nights[nights.length-1];
+  nights.push({...last}); renderRows(); calc();
+});
+$("nights").addEventListener("click", e=>{
+  const i = e.target.dataset.del; if(i===undefined) return;
+  nights.splice(+i,1); renderRows(); calc();
+});
+$("copy").addEventListener("click", async ()=>{
+  const b=$("copy");
+  try{ await navigator.clipboard.writeText($("quote").value); b.textContent="Copied"; }
+  catch{ $("quote").select(); b.textContent="Press Ctrl/Cmd+C"; }
+  setTimeout(()=>b.textContent="Copy quote",1800);
+});
+</script>
+</body>
+</html>
