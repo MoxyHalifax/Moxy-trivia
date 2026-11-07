@@ -39,7 +39,9 @@ def script_for(w):
     """The lines she says, in order. Must match the cues app.js understands."""
     a = "an" if w["pos"][0] in "aeiou" else "a"
     lines = [
-        dict(cue="intro", text="Hi everyone! It's Ms. Lexi, and it's time for today's word."),
+        # "Miz" so the voice doesn't read "Ms." as the letters M-S; the caption still shows "Ms."
+        dict(cue="intro", text="Hi everyone! It's Miz Lexi, and it's time for today's word.",
+             caption="Hi everyone! It's Ms. Lexi, and it's time for today's word."),
         dict(cue="word", text=f"Today's word is {w['word']}."),
         dict(cue="say", text=f"Say it with me. {w['word']}.", caption=f"Say it with me: {w['say']}", speed=0.75),
         dict(cue="repeat", text=f"{w['word']}.", caption=f"{cap(w['word'])}.", gap=0.7),
