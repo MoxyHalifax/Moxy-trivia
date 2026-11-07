@@ -39,9 +39,8 @@ def script_for(w):
     """The lines she says, in order. Must match the cues app.js understands."""
     a = "an" if w["pos"][0] in "aeiou" else "a"
     lines = [
-        # "Miz" so the voice doesn't read "Ms." as the letters M-S; the caption still shows "Ms."
-        dict(cue="intro", text="Hi everyone! It's Miz Lexi, and it's time for today's word.",
-             caption="Hi everyone! It's Ms. Lexi, and it's time for today's word."),
+        # Open with the hook: the most surprising fact, said in the first second
+        dict(cue="hook", text=w["hook"], gap=0),
         dict(cue="word", text=f"Today's word is {w['word']}."),
         dict(cue="say", text=f"Say it with me. {w['word']}.", caption=f"Say it with me: {w['say']}", speed=0.75),
         dict(cue="repeat", text=f"{w['word']}.", caption=f"{cap(w['word'])}.", gap=0.7),
@@ -50,7 +49,9 @@ def script_for(w):
     ]
     if w.get("origin"):
         lines.append(dict(cue="origin", text=f"Where does this word come from? {w['origin']}"))
-    lines.append(dict(cue="outro", text=f"Try using {w['word']} today. See you tomorrow!"))
+    # "Miz" so the voice doesn't read "Ms." as the letters M-S; the caption still shows "Ms."
+    lines.append(dict(cue="outro", text=f"Try using {w['word']} today. See you tomorrow with Miz Lexi!",
+                      caption=f"Try using {w['word']} today. See you tomorrow with Ms. Lexi!"))
     return lines
 
 
@@ -79,8 +80,8 @@ def mouth_data(audio):
 
 
 def make(k, w):
-    parts, lines, t = [], [], 0.4  # short breath before she starts
-    parts.append(np.zeros(int(0.4 * SR), dtype=np.float32))
+    parts, lines, t = [], [], 0.15  # tiny breath so the first word isn't clipped
+    parts.append(np.zeros(int(0.15 * SR), dtype=np.float32))
     for ln in script_for(w):
         gap = ln.get("gap", 0.35)
         parts.append(np.zeros(int(gap * SR), dtype=np.float32)); t += gap

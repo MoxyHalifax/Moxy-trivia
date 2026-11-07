@@ -53,14 +53,15 @@ function render(t, clock) {
     ease((t - tOutro) / 0.3)
   );
   // arm: rest (hidden behind body) -> wave when excited, point at the board while teaching
-  const up = Math.max(point, excited);
+  const waveOut = ease((t - tOutro) / 0.3); // she only waves goodbye; the hook is said with raised brows
+  const up = Math.max(point, waveOut);
   const wave = calm ? 0 : Math.sin(clock * 2 * Math.PI * 1.6) * 9;
-  const tx = point >= excited ? 263 : 270 + wave, ty = point >= excited ? 232 : 238;
+  const tx = point >= waveOut ? 263 : 270 + wave, ty = point >= waveOut ? 232 : 238;
   const hx = 205 + (tx - 205) * up, hy = 380 + (ty - 380) * up;
   $("arm-p").setAttribute("d", `M215 330 Q${(215 + hx) / 2 + 22} ${(330 + hy) / 2 + 12} ${hx} ${hy}`);
   $("hand").setAttribute("cx", hx); $("hand").setAttribute("cy", hy);
   $("finger").setAttribute("x", hx - 3.5); $("finger").setAttribute("y", hy - 32);
-  $("finger").setAttribute("opacity", point >= excited ? point : 0);
+  $("finger").setAttribute("opacity", point >= waveOut ? point : 0);
   $("brows").setAttribute("transform", `translate(0 ${-5 * excited})`);
 
   // mouth follows the recorded voice
@@ -81,9 +82,11 @@ function render(t, clock) {
 
   // board
   const p = clamp((t - tWord) / 0.5);
-  $("word").textContent = t >= tWord ? w.word : "";
-  $("word").style.opacity = clamp(p * 3);
-  $("word").style.transform = `scale(${0.6 + 0.4 * pop(p)})`;
+  // during the hook the board shows a mystery "?" until the word is revealed
+  $("word").textContent = t >= tWord ? w.word : (mode !== "idle" && t >= lines[0].t0 ? "?" : "");
+  const q = clamp((t - lines[0].t0) / 0.4);
+  $("word").style.opacity = t >= tWord ? clamp(p * 3) : q;
+  $("word").style.transform = `scale(${t >= tWord ? 0.6 + 0.4 * pop(p) : 0.6 + 0.4 * pop(q)})`;
   $("say").textContent = t >= tSay ? `${w.say} · ${w.pos}` : "";
   let current = null;
   for (const id of ["meaning", "sentence", "origin"]) {
