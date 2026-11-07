@@ -1,4 +1,4 @@
-# Instagram trial: week 1
+# Instagram trial: week 1 (Mon Nov 9 – Sat Nov 14)
 
 ## Profile
 **Name:** Word of the Day with Ms. Lexi
@@ -11,7 +11,7 @@
 
 ---
 
-### Day 1: meticulous
+### Mon Nov 9 (Day 1): meticulous
 **Big words build confident kids. One a day, under a minute. 📚**
 
 Meet Ms. Lexi. Every day she teaches one grade 7–9 word: how to say it, what it means, how to use it, and where it comes from.
@@ -27,38 +27,43 @@ Follow for a new word every day, and save this for later. 🔖
 
 #wordoftheday #vocabulary #grade7 #grade8 #grade9 #middleschool #juniorhigh #albertateachers #teachersofinstagram #parentingtips
 
-### Day 2: resilient
+### Tue Nov 10 (Day 2): resilient
 Word of the day: **resilient** (rih-ZIL-yent) — able to bounce back after something hard happens.
 It comes from Latin for *to leap back*. 💪
 Where has your student been resilient this year?
 #wordoftheday #vocabulary #grade7 #grade8 #grade9 #middleschool #juniorhigh #albertateachers #growthmindset #homeschool
 
-### Day 3: ambiguous
+### Wed Nov 11 (Day 3): ambiguous
 Word of the day: **ambiguous** (am-BIG-yoo-us) — having more than one possible meaning.
 Great word for book reports and movie talks. 🎬
 #wordoftheday #vocabulary #grade7 #grade8 #grade9 #middleschool #juniorhigh #albertateachers #englishclass #homeschool
 
-### Day 4: benevolent
+### Thu Nov 12 (Day 4): benevolent
 Word of the day: **benevolent** (buh-NEV-uh-lent) — kind and wanting to help others.
 Latin *bene* (well) + *volens* (wishing) = wishing others well. ❄️
 #wordoftheday #vocabulary #grade7 #grade8 #grade9 #middleschool #juniorhigh #albertateachers #kindness #homeschool
 
-### Day 5: procrastinate
+### Fri Nov 13 (Day 5): procrastinate
 Word of the day: **procrastinate** (proh-KRAS-tih-nayt) — to keep putting off something you should do.
 Latin for *pushing things to tomorrow*. Sound familiar? 😅
 Tag someone who needs this one.
+That's week one! Tomorrow: a quick quiz on all 5 words. 🧠
 #wordoftheday #vocabulary #grade7 #grade8 #grade9 #middleschool #juniorhigh #albertateachers #studytips #homeschool
 
-### Day 6: tenacious
+### Week 2 (Mon Nov 16): tenacious
 Word of the day: **tenacious** (tuh-NAY-shus) — refusing to give up.
 From Latin *tenere*, to hold. 🐶
 #wordoftheday #vocabulary #grade7 #grade8 #grade9 #middleschool #juniorhigh #albertateachers #learnenglish #homeschool
 
-### Day 7: ubiquitous
+### Week 2 (Tue Nov 17): ubiquitous
 Word of the day: **ubiquitous** (yoo-BIK-wih-tus) — found everywhere.
 Bonus points if your student spots something ubiquitous today. 📱
-That's week one! Which word should Ms. Lexi teach next? Comment below. 👇
 #wordoftheday #vocabulary #grade7 #grade8 #grade9 #middleschool #juniorhigh #albertateachers #learnenglish #homeschool
+
+### Sat Nov 14: Quiz Reel
+Quiz time! 🧠 How many of this week's words do you know?
+Pause and answer, then check the end. Comment your score 👇
+#wordoftheday #vocabulary #quiz #juniorhigh #albertateachers #middleschool
 
 ---
 
