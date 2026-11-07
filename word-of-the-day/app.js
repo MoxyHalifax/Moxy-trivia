@@ -4,6 +4,7 @@
 // Everything on screen is drawn from one clock, render(t), so the browser and
 // the exported videos (tools/render_video.js) show exactly the same thing.
 const START_DATE = new Date(2026, 10, 1); // Nov 1, 2026 (months start at 0)
+const HANDLE = "@wordswithmslexi"; // shown on exported videos and covers
 
 const $ = (id) => document.getElementById(id);
 const audio = $("audio");
@@ -157,7 +158,9 @@ async function load() {
   data = null; mode = "idle";
   audio.pause();
   playBtn.textContent = "▶ Play"; playBtn.disabled = true;
-  $("episode").textContent = `Episode ${episode}` + (episode === todayEp ? " · Today" : "");
+  $("episode").textContent = renderFormat
+    ? `${HANDLE} · Episode ${episode}`
+    : `Episode ${episode}` + (episode === todayEp ? " · Today" : "");
   $("prev").disabled = episode <= 1;
   $("next").disabled = episode >= todayEp && !renderFormat;
   $("caption").textContent = "Loading…";

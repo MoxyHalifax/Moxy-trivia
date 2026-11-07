@@ -112,3 +112,8 @@ body.render-horizontal .say { margin-bottom: 4px; }
 body.render-horizontal .part { margin-top: 8px; }
 body.render-horizontal .caption { font-size: 19px; margin: 12px 0 0; padding: 10px 16px; min-height: 0; }
 body.render-horizontal .stage { min-height: 0; grid-template-rows: minmax(0, 1fr); }
+body.render .episode { color: var(--rose); font-weight: 700; }
+body.render-vertical header { flex-direction: column; align-items: flex-start; gap: 2px; }
+body.render-vertical .episode { font-size: 15px; }
+body.render-horizontal .episode { font-size: 16px; }
+body.render-cover .episode { text-transform: none; letter-spacing: .5px; font-size: 17px; }
