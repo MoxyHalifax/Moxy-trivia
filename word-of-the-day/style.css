@@ -21,19 +21,8 @@ header { display: flex; justify-content: space-between; align-items: baseline; f
 
 .stage { display: grid; grid-template-columns: 260px 1fr; gap: 16px; align-items: end; margin-top: 16px; }
 
-/* Ms. Lexi */
+/* Ms. Lexi (all her movement is driven from app.js so video frames match playback) */
 .lexi { width: 100%; height: auto; overflow: visible; }
-.body-bob { animation: bob 3.5s ease-in-out infinite; transform-origin: 150px 400px; }
-@keyframes bob { 50% { transform: translateY(-4px) rotate(-1deg); } }
-.eyes ellipse { transform-box: fill-box; transform-origin: center; animation: blink 4.5s infinite; }
-@keyframes blink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
-.talk { display: none; }
-.lexi.talking .talk { display: block; }
-.lexi.talking .smile { display: none; }
-.brows { transition: transform .3s; }
-.lexi.excited .brows { transform: translateY(-5px); }
-.arm { transform-origin: 215px 320px; transform: rotate(25deg); transition: transform .5s cubic-bezier(.3,1.6,.5,1); }
-.lexi.pointing .arm { transform: rotate(0deg); }
 
 /* Chalkboard */
 .board {
@@ -43,13 +32,11 @@ header { display: flex; justify-content: space-between; align-items: baseline; f
 }
 .word { font-size: 44px; font-weight: 700; letter-spacing: 1px; color: var(--accent); min-height: 54px; }
 .say { font-size: 18px; opacity: .85; margin-bottom: 12px; min-height: 24px; }
-.part { opacity: 0; transform: translateY(8px); transition: opacity .5s, transform .5s; margin-top: 12px; }
-.part.show { opacity: 1; transform: none; }
+.part { opacity: 0; margin-top: 12px; }
 .part h3 { margin: 0 0 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); }
 .part p { margin: 0; font-size: 18px; line-height: 1.4; }
 .part.current p { text-decoration: underline wavy rgba(242,193,78,.5); text-underline-offset: 6px; }
-.pop { animation: pop .5s ease-out; }
-@keyframes pop { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.08); } 100% { transform: scale(1); opacity: 1; } }
+.word { transform-origin: left center; }
 
 .caption {
   margin: 16px 0; min-height: 52px; padding: 12px 16px; border-radius: 8px;
@@ -69,3 +56,31 @@ button:disabled { opacity: .35; cursor: default; }
   .board { min-height: 0; }
   .word { font-size: 34px; }
 }
+
+/* Video export layouts: tools/render_video.js opens the page with ?render=vertical or ?render=horizontal */
+body.render { overflow: hidden; }
+body.render .controls { display: none; }
+body.render .caption { flex-shrink: 0; }
+body.render main { max-width: none; padding: 32px 30px; }
+body.render-vertical main { width: 540px; height: 960px; display: flex; flex-direction: column; }
+body.render-vertical .brand { font-size: 28px; }
+body.render-vertical .stage { grid-template-columns: 1fr; gap: 0; }
+body.render-vertical .stage { flex: 1; display: flex; flex-direction: column; }
+body.render-vertical .lexi { width: 240px; max-width: none; margin: 0 auto -20px; display: block; position: relative; z-index: 1; }
+body.render-vertical .board { min-height: 0; flex: 1; padding: 18px 22px; }
+body.render-vertical .word { font-size: 48px; }
+body.render-vertical .say { font-size: 20px; }
+body.render-vertical .part h3 { font-size: 14px; }
+body.render-vertical .part p { font-size: 19px; }
+body.render-vertical .caption { font-size: 21px; margin: 16px 0 0; }
+body.render-horizontal main { width: 960px; height: 540px; padding: 22px 30px; display: flex; flex-direction: column; }
+body.render-horizontal .stage { flex: 1; align-items: stretch; }
+body.render-horizontal .lexi { align-self: end; }
+body.render-horizontal .stage { grid-template-columns: 250px 1fr; margin-top: 8px; }
+body.render-horizontal .board { min-height: 0; padding: 14px 22px; }
+body.render-horizontal .word { font-size: 42px; min-height: 0; }
+body.render-horizontal .say { font-size: 19px; }
+body.render-horizontal .say { margin-bottom: 4px; }
+body.render-horizontal .part { margin-top: 8px; }
+body.render-horizontal .part p { font-size: 18.5px; }
+body.render-horizontal .caption { font-size: 19px; margin: 12px 0 0; padding: 10px 16px; min-height: 0; }

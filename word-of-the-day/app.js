@@ -1,142 +1,162 @@
 // Word of the Day with Ms. Lexi
 // Each day plays the next word in words.js. Episode 1 = START_DATE.
+// Her voice is pre-recorded (episodes/<word>.mp3, made by tools/make_audio.py).
+// Everything on screen is drawn from one clock, render(t), so the browser and
+// the exported videos (tools/render_video.js) show exactly the same thing.
 const START_DATE = new Date(2026, 10, 1); // Nov 1, 2026 (months start at 0)
 
 const $ = (id) => document.getElementById(id);
-const lexi = $("lexi");
-const talk = $("talk");
+const audio = $("audio");
 const playBtn = $("play");
+const params = new URLSearchParams(location.search);
+const renderFormat = params.get("render"); // "vertical" | "horizontal" when exporting video
+const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const todayEp = Math.max(1, Math.floor((startOfDay(new Date()) - START_DATE) / 864e5) + 1);
-let episode = todayEp;
-let runId = 0; // bumps on stop so an old run quits
+let episode = parseInt(params.get("ep"), 10) > 0 ? parseInt(params.get("ep"), 10) : todayEp;
+let data = null;      // timing + mouth data for the loaded episode
+let mode = "idle";    // idle | playing | done
+let loadId = 0;
 
 function startOfDay(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
 function wordFor(ep) { return WORDS[(ep - 1) % WORDS.length]; }
-function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-function article(w) { return /^[aeiou]/i.test(w) ? "an" : "a"; }
-const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+const clamp = (x) => Math.max(0, Math.min(1, x));
+const ease = (x) => { x = clamp(x); return x * x * (3 - 2 * x); };
+const pop = (x) => { x = clamp(x); const c = 1.7; return 1 + (c + 1) * (x - 1) ** 3 + c * (x - 1) ** 2; };
 
-// ---- Voice ----
-let voice = null;
-function pickVoice() {
-  const voices = speechSynthesis.getVoices().filter((v) => v.lang.startsWith("en"));
-  const female = /female|samantha|victoria|karen|moira|tessa|fiona|zira|jenny|aria|serena|libby|sonia|natasha/i;
-  voice = voices.find((v) => female.test(v.name)) || voices[0] || null;
-}
-if ("speechSynthesis" in window) {
-  pickVoice();
-  speechSynthesis.onvoiceschanged = pickVoice;
+// ---- Drawing one moment in time ----
+function cueTime(cue) {
+  const l = data && data.lines.find((l) => l.cue === cue);
+  return l ? l.t0 : Infinity;
 }
 
-// Mouth moves while she talks
-let mouthTimer = null;
-function startTalking() {
-  lexi.classList.add("talking");
-  clearInterval(mouthTimer);
-  mouthTimer = setInterval(() => talk.setAttribute("ry", 2 + Math.random() * 8), 90);
-}
-function stopTalking() {
-  lexi.classList.remove("talking");
-  clearInterval(mouthTimer);
-}
+// t = position in the episode (seconds). clock = time used for idle sway and blinking.
+function render(t, clock) {
+  const w = wordFor(episode);
+  // gentle sway + blink, always running
+  const sway = calm ? 0 : Math.sin((clock * 2 * Math.PI) / 3.5);
+  $("bob").setAttribute("transform", `translate(0 ${-2 - 2 * sway}) rotate(${-0.6 * sway} 150 400)`);
+  const blinkPhase = (clock + 1.3) % 4.3;
+  const lid = blinkPhase < 0.14 ? 1 - Math.sin((blinkPhase / 0.14) * Math.PI) * 0.9 : 1;
+  $("eyes").setAttribute("transform", `translate(0 152) scale(1 ${lid}) translate(0 -152)`);
 
-function say(text, { rate = 0.95, caption = text } = {}) {
-  $("caption").textContent = caption;
-  startTalking();
-  return new Promise((resolve) => {
-    const done = () => { stopTalking(); resolve(); };
-    if (!("speechSynthesis" in window)) {
-      // No voice available: animate for roughly reading time
-      return wait(400 + text.split(" ").length * 330).then(done);
+  if (!data) return;
+  const lines = data.lines;
+  const tWord = cueTime("word"), tOutro = cueTime("outro"), tSay = cueTime("say");
+
+  // pose
+  const point = ease((t - tWord) / 0.5) * (1 - ease((t - tOutro) / 0.5));
+  const intro = lines[0];
+  const excited = Math.max(
+    ease((t - intro.t0) / 0.3) * (1 - ease((t - intro.t1) / 0.3)),
+    ease((t - tOutro) / 0.3)
+  );
+  // arm: rest (hidden behind body) -> wave when excited, point at the board while teaching
+  const up = Math.max(point, excited);
+  const wave = calm ? 0 : Math.sin(clock * 2 * Math.PI * 1.6) * 9;
+  const tx = point >= excited ? 263 : 270 + wave, ty = point >= excited ? 232 : 238;
+  const hx = 205 + (tx - 205) * up, hy = 380 + (ty - 380) * up;
+  $("arm-p").setAttribute("d", `M215 330 Q${(215 + hx) / 2 + 22} ${(330 + hy) / 2 + 12} ${hx} ${hy}`);
+  $("hand").setAttribute("cx", hx); $("hand").setAttribute("cy", hy);
+  $("finger").setAttribute("x", hx - 3.5); $("finger").setAttribute("y", hy - 32);
+  $("finger").setAttribute("opacity", point >= excited ? point : 0);
+  $("brows").setAttribute("transform", `translate(0 ${-5 * excited})`);
+
+  // mouth follows the recorded voice
+  const f = Math.min(data.open.length - 1, Math.max(0, Math.floor(t * data.fps)));
+  const speaking = mode !== "idle" && lines.some((l) => t >= l.t0 && t <= l.t1 + 0.05);
+  const open = speaking ? data.open[f] : 0;
+  const wide = data.wide[f];
+  $("smile").setAttribute("display", open > 0 ? "none" : "inline");
+  $("mouth").setAttribute("display", open > 0 ? "inline" : "none");
+  if (open > 0) {
+    const rx = 8 + wide * 8 - open * 1.5, ry = 2 + open * 9;
+    for (const id of ["mouth-e", "mclip-e"]) {
+      $(id).setAttribute("rx", rx); $(id).setAttribute("ry", ry); $(id).setAttribute("cy", 196 + ry);
     }
-    const u = new SpeechSynthesisUtterance(text);
-    if (voice) u.voice = voice;
-    u.rate = rate;
-    u.pitch = 1.1;
-    u.onend = done;
-    u.onerror = done;
-    speechSynthesis.speak(u);
-  });
-}
+    $("tongue").setAttribute("cy", 196 + ry * 2 - 1);
+    $("tongue").setAttribute("rx", rx * 0.6);
+  }
 
-// ---- Board ----
-function resetBoard() {
-  const w = wordFor(episode);
-  $("episode").textContent = `Episode ${episode}` + (episode === todayEp ? " · Today" : "");
-  $("word").textContent = "";
-  $("say").textContent = "";
+  // board
+  const p = clamp((t - tWord) / 0.5);
+  $("word").textContent = t >= tWord ? w.word : "";
+  $("word").style.opacity = clamp(p * 3);
+  $("word").style.transform = `scale(${0.6 + 0.4 * pop(p)})`;
+  $("say").textContent = t >= tSay ? `${w.say} · ${w.pos}` : "";
+  let current = null;
   for (const id of ["meaning", "sentence", "origin"]) {
-    $(id).classList.remove("show", "current");
-    $(id).querySelector("p").textContent = "";
+    const tc = cueTime(id), el = $(id);
+    const k = ease((t - tc) / 0.5);
+    el.style.opacity = k;
+    el.style.transform = `translateY(${8 * (1 - k)}px)`;
+    if (t >= tc) current = el;
   }
-  $("origin").style.display = w.origin ? "" : "none";
-  $("caption").textContent = "Press play to meet today's word.";
-  $("prev").disabled = episode <= 1;
-  $("next").disabled = episode >= todayEp;
-  lexi.classList.remove("pointing", "excited");
+  for (const id of ["meaning", "sentence", "origin"]) $(id).classList.toggle("current", $(id) === current && t < tOutro);
+
+  // caption: the line she's on (or the last one she said)
+  let cap = mode === "idle" ? "Press play to meet today's word." : "";
+  for (const l of lines) if (t >= l.t0 - 0.05) cap = l.caption;
+  $("caption").textContent = cap;
 }
 
-function reveal(id, text) {
-  document.querySelectorAll(".part.current").forEach((el) => el.classList.remove("current"));
-  const el = $(id);
-  el.querySelector("p").textContent = text;
-  el.classList.add("show", "current");
-}
-
-// ---- The episode ----
-async function play() {
-  const my = ++runId;
-  const alive = () => my === runId;
+// ---- Loading an episode ----
+async function load() {
+  const my = ++loadId;
   const w = wordFor(episode);
-  resetBoard();
-  playBtn.textContent = "■ Stop";
-
-  const steps = [
-    async () => { lexi.classList.add("excited"); await say("Hi everyone! It's Ms. Lexi, and it's time for today's word."); lexi.classList.remove("excited"); },
-    async () => {
-      lexi.classList.add("pointing");
-      $("word").textContent = w.word; $("word").classList.remove("pop"); void $("word").offsetWidth; $("word").classList.add("pop");
-      await say(`Today's word is ${w.word}.`);
-    },
-    async () => {
-      $("say").textContent = `${w.say} · ${w.pos}`;
-      await say(`Say it with me. ${w.word}.`, { rate: 0.6, caption: `Say it with me: ${w.say}` });
-    },
-    async () => { await wait(700); await say(`${w.word}.`, { rate: 0.85, caption: `${cap(w.word)}.` }); },
-    async () => { reveal("meaning", cap(w.definition) + "."); await say(`${cap(w.word)} is ${article(w.pos)} ${w.pos}. It means ${w.definition}.`); },
-    async () => { reveal("sentence", w.sentence); await say(`Here it is in a sentence. ${w.sentence}`); },
-    async () => { if (w.origin) { reveal("origin", w.origin); await say(`Where does this word come from? ${w.origin}`); } },
-    async () => {
-      document.querySelectorAll(".part.current").forEach((el) => el.classList.remove("current"));
-      lexi.classList.remove("pointing"); lexi.classList.add("excited");
-      await say(`Try using ${w.word} today. See you tomorrow!`);
-    },
-  ];
-
-  for (const step of steps) {
-    if (!alive()) return;
-    await step();
-    await wait(350);
+  data = null; mode = "idle";
+  audio.pause();
+  playBtn.textContent = "▶ Play"; playBtn.disabled = true;
+  $("episode").textContent = `Episode ${episode}` + (episode === todayEp ? " · Today" : "");
+  $("prev").disabled = episode <= 1;
+  $("next").disabled = episode >= todayEp && !renderFormat;
+  $("caption").textContent = "Loading…";
+  for (const id of ["meaning", "sentence", "origin"]) $(id).querySelector("p").textContent = "";
+  $("meaning").querySelector("p").textContent = w.definition.charAt(0).toUpperCase() + w.definition.slice(1) + ".";
+  $("sentence").querySelector("p").textContent = w.sentence;
+  $("origin").querySelector("p").textContent = w.origin || "";
+  $("origin").style.display = w.origin ? "" : "none";
+  try {
+    const res = await fetch(`episodes/${encodeURIComponent(w.word)}.json`);
+    if (!res.ok) throw new Error();
+    const d = await res.json();
+    if (my !== loadId) return;
+    data = d;
+    audio.src = `episodes/${encodeURIComponent(w.word)}.mp3`;
+    playBtn.disabled = false;
+    render(0, performance.now() / 1000);
+  } catch {
+    if (my === loadId) $("caption").textContent = "This episode hasn't been recorded yet. Run tools/make_audio.py.";
   }
-  if (alive()) { playBtn.textContent = "↻ Replay"; lexi.classList.remove("excited"); }
 }
 
-function stop() {
-  runId++;
-  if ("speechSynthesis" in window) speechSynthesis.cancel();
-  stopTalking();
-  playBtn.textContent = "▶ Play";
+// ---- Playback ----
+function tick() {
+  const clock = performance.now() / 1000;
+  if (mode === "playing") render(audio.currentTime, clock);
+  else if (mode === "done") render(data.duration, clock);
+  else render(0, clock);
+  requestAnimationFrame(tick);
 }
+
+audio.addEventListener("ended", () => { mode = "done"; playBtn.textContent = "↻ Replay"; });
 
 playBtn.addEventListener("click", () => {
-  if (playBtn.textContent.includes("Stop")) { stop(); resetBoard(); } else play();
+  if (mode === "playing") { audio.pause(); audio.currentTime = 0; mode = "idle"; playBtn.textContent = "▶ Play"; return; }
+  audio.currentTime = 0;
+  mode = "playing";
+  playBtn.textContent = "■ Stop";
+  audio.play().catch(() => { mode = "idle"; playBtn.textContent = "▶ Play"; $("caption").textContent = "Tap play again to start the sound."; });
 });
-$("prev").addEventListener("click", () => { stop(); episode--; resetBoard(); });
-$("next").addEventListener("click", () => { stop(); episode++; resetBoard(); });
+$("prev").addEventListener("click", () => { episode--; load(); });
+$("next").addEventListener("click", () => { episode++; load(); });
 
-// ?ep=5 jumps to a specific episode (handy for recording ahead)
-const q = parseInt(new URLSearchParams(location.search).get("ep"), 10);
-if (q > 0) episode = q;
-resetBoard();
-if (episode > todayEp) $("next").disabled = false;
+// ---- Video export hooks (used by tools/render_video.js) ----
+if (renderFormat) {
+  document.body.classList.add("render", `render-${renderFormat}`);
+  window.__ready = load().then(() => ({ word: wordFor(episode).word, duration: data && data.duration }));
+  window.__render = (t) => { mode = "playing"; render(t, t); };
+} else {
+  load();
+  requestAnimationFrame(tick);
+}
