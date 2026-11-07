@@ -1,77 +1,150 @@
 # Instagram trial: week 1 (Sat Nov 7 – Fri Nov 13)
 
 Schedule: a new word Sunday–Thursday, a quiz on Friday, Saturdays off.
-Launch week starts today (Saturday) as a one-off, so it has 6 words.
+Launch week starts Saturday as a one-off, so it has 6 words.
 
 ## Profile
-**Name:** Word of the Day with Ms. Lexi
-**Bio:** A new grade 7–9 word every day, in under a minute 📚 Meaning, example, and where it comes from. For curious students, parents and teachers.
+Name: Ms. Lexi | Word of the Day
+Bio: 📚 One grade 7–9 vocabulary word a day / ⏱️ Under 60 seconds: meaning, example, origin / 👩‍🏫 For parents & teachers / 👇 New word every day
 
 ## Before each post
-- Upload the `-vertical.mp4` as a Reel; choose the matching `-cover.png` as the cover.
-- Settings → turn on **AI label** (her voice is computer-generated).
-- Paste the caption below. Best time to try: 7–8 pm, when parents scroll.
+- Reel: the `-vertical.mp4`; cover: the matching `-cover.png`.
+- Turn on the AI label (her voice is computer-generated).
+- Captions below are Psych Checked: surprise first, the outcome parents and teachers want, one ask.
+- They're plain text, ready to paste (Instagram doesn't show bold).
 
 ---
 
-### Sat Nov 7 (launch): meticulous
-**Big words build confident kids. One a day, under a minute. 📚**
+### Sat Nov 7 (launch): meticulous — POSTED
+```
+This word started out meaning scared. 😨
 
-Meet Ms. Lexi. Every day she teaches one grade 7–9 word: how to say it, what it means, how to use it, and where it comes from.
+Meet Ms. Lexi: one junior high word a day, under a minute. Better essays, more confident speaking.
 
-Today's word: **meticulous** (muh-TIK-yuh-lus)
+Today's word: meticulous (muh-TIK-yuh-lus)
 👉 showing great attention to detail
 
-Fun fact: it comes from the Latin word for *fear*. It first meant being careful because you're afraid of getting it wrong.
+It comes from the Latin word for fear. It first meant being careful because you're afraid of getting it wrong.
 
-**Try this tonight:** ask your student to use *meticulous* at dinner. Teachers, it makes a great 60-second bell-ringer.
+Try this tonight: ask your student to use meticulous at dinner. Teachers, it's a ready-made 60-second bell-ringer.
 
-Follow for a new word every day, and save this for later. 🔖
+Follow so you don't miss tomorrow's word. 📚
 
-#wordoftheday #vocabulary #grade7 #grade8 #grade9 #middleschool #juniorhigh #albertateachers #teachersofinstagram #parentingtips
+#wordoftheday #vocabulary #grade7 #grade8 #grade9 #juniorhigh #middleschool #albertateachers #teachersofinstagram #parentingtips
+```
 
-### Sun Nov 8: resilient
-Word of the day: **resilient** (rih-ZIL-yent) — able to bounce back after something hard happens.
-It comes from Latin for *to leap back*. 💪
-Where has your student been resilient this year?
-#wordoftheday #vocabulary #grade7 #grade8 #grade9 #middleschool #juniorhigh #albertateachers #growthmindset #homeschool
+### Sun Nov 8: resilient — DONE
+```
+Your kid had a rough week? There's a word for bouncing back. 💪
+
+Today's word: resilient (rih-ZIL-yent)
+👉 able to recover quickly after something hard happens
+
+It comes from the Latin resilire: to leap back, like a ball bouncing back into shape.
+
+Try this tonight: ask your student about a time they were resilient. It builds vocabulary and confidence at the same time. Teachers, it's a great Monday-morning warm-up.
+
+Follow so you don't miss tomorrow's word. 📚
+
+#wordoftheday #vocabulary #resilience #growthmindset #juniorhigh #grade7 #grade8 #grade9 #albertateachers #parentingtips
+```
 
 ### Mon Nov 9: ambiguous
-Word of the day: **ambiguous** (am-BIG-yoo-us) — having more than one possible meaning.
-Great word for book reports and movie talks. 🎬
-#wordoftheday #vocabulary #grade7 #grade8 #grade9 #middleschool #juniorhigh #albertateachers #englishclass #homeschool
+```
+Ever argued about what a movie ending meant? There's a word for that. 🎬
+
+Today's word: ambiguous (am-BIG-yoo-us)
+👉 having more than one possible meaning
+
+It comes from the Latin ambiguus. The "ambi" part means both ways, like being pulled in two directions.
+
+Try this tonight: ask your student about a book or movie with an ambiguous ending. Teachers, it's the perfect word for novel studies and essay writing.
+
+Follow so you don't miss tomorrow's word. 📚
+
+#wordoftheday #vocabulary #englishclass #juniorhigh #grade7 #grade8 #grade9 #albertateachers #teachersofinstagram #parentingtips
+```
 
 ### Tue Nov 10: benevolent
-Word of the day: **benevolent** (buh-NEV-uh-lent) — kind and wanting to help others.
-Latin *bene* (well) + *volens* (wishing) = wishing others well. ❄️
-#wordoftheday #vocabulary #grade7 #grade8 #grade9 #middleschool #juniorhigh #albertateachers #kindness #homeschool
+```
+This word literally means "wishing others well." ❄️
+
+Today's word: benevolent (buh-NEV-uh-lent)
+👉 kind and wanting to help others
+
+Latin bene (well) + volens (wishing). Think of the neighbour who shovels everyone's driveway.
+
+Try this tonight: ask your student who the most benevolent person they know is, and why. Teachers, it pairs well with any kindness or character unit.
+
+Follow so you don't miss tomorrow's word. 📚
+
+#wordoftheday #vocabulary #kindness #juniorhigh #grade7 #grade8 #grade9 #albertateachers #teachersofinstagram #parentingtips
+```
 
 ### Wed Nov 11: procrastinate
 _Remembrance Day: post in the evening, after ceremonies._
-Word of the day: **procrastinate** (proh-KRAS-tih-nayt) — to keep putting off something you should do.
-Latin for *pushing things to tomorrow*. Sound familiar? 😅
-Tag someone who needs this one.
-#wordoftheday #vocabulary #grade7 #grade8 #grade9 #middleschool #juniorhigh #albertateachers #studytips #homeschool
+```
+This word literally means "pushing things to tomorrow." Sound familiar? 😅
+
+Today's word: procrastinate (proh-KRAS-tih-nayt)
+👉 to keep putting off something you should do
+
+Latin pro (forward) + crastinus (of tomorrow).
+
+Try this tonight: ask your student what they procrastinate on most. Then pick one small thing to do right now. Teachers, it's a great lead-in to study-skills talks.
+
+Tag a parent whose kid needs this one. 👇
+
+#wordoftheday #vocabulary #studytips #juniorhigh #grade7 #grade8 #grade9 #albertateachers #teachersofinstagram #parentingtips
+```
 
 ### Thu Nov 12: tenacious
-Word of the day: **tenacious** (tuh-NAY-shus) — refusing to give up.
-From Latin *tenere*, to hold. 🐶
-That's week one! Tomorrow: a quick quiz on all 6 words. 🧠
-#wordoftheday #vocabulary #grade7 #grade8 #grade9 #middleschool #juniorhigh #albertateachers #learnenglish #homeschool
+```
+This word is for kids who never, ever give up. 🐶
+
+Today's word: tenacious (tuh-NAY-shus)
+👉 refusing to give up
+
+It comes from the Latin tenere: to hold. A tenacious person holds on tight.
+
+Try this tonight: tell your student about a time they were tenacious. Kids remember words tied to praise. Teachers, it's a great word for goal-setting.
+
+Tomorrow: a quick quiz on all 6 words from this week. Follow so you don't miss it. 🧠
+
+#wordoftheday #vocabulary #growthmindset #juniorhigh #grade7 #grade8 #grade9 #albertateachers #teachersofinstagram #parentingtips
+```
 
 ### Fri Nov 13: Quiz Reel
-Quiz time! 🧠 How many of this week's 6 words do you know?
-Pause and answer, then check the end. Comment your score 👇
-#wordoftheday #vocabulary #quiz #juniorhigh #albertateachers #middleschool
+_Video coming by Thursday._
+```
+Quiz time! 🧠 How many of this week's 6 words does your student know?
 
-### Week 2 (Sun Nov 15): ubiquitous
-Word of the day: **ubiquitous** (yoo-BIK-wih-tus) — found everywhere.
-Bonus points if your student spots something ubiquitous today. 📱
-#wordoftheday #vocabulary #grade7 #grade8 #grade9 #middleschool #juniorhigh #albertateachers #learnenglish #homeschool
+Pause, answer, then check the end. Comment your family's or class's score. 👇
+
+Missed one? All 6 words are on our page. Save this to quiz again later. 🔖
+
+#wordoftheday #vocabulary #quiz #juniorhigh #grade7 #grade8 #grade9 #albertateachers #teachersofinstagram #parentingtips
+```
+
+### Sun Nov 15 (week 2): ubiquitous
+```
+Phones are everywhere. There's a fancy word for that. 📱
+
+Today's word: ubiquitous (yoo-BIK-wih-tus)
+👉 found everywhere
+
+It comes from the Latin ubique, which simply means everywhere.
+
+Try this tonight: challenge your student to spot 3 ubiquitous things at home. Teachers, it's a fun one for science and social studies too.
+
+Follow so you don't miss tomorrow's word. 📚
+
+#wordoftheday #vocabulary #juniorhigh #grade7 #grade8 #grade9 #albertateachers #teachersofinstagram #parentingtips #homeschool
+```
 
 ---
 
-## What to watch after 7 days
-- **Views per Reel:** which words got the most?
-- **Saves and shares:** the best sign that parents and teachers find it useful.
-- **Follows:** did people come back for more?
+## What to watch after 30 days
+- Views per Reel: which words and hooks performed best?
+- Saves and shares: the best sign parents and teachers find it useful.
+- Follows per 100 views: is the page turning viewers into followers?
