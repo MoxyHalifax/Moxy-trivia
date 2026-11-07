@@ -50,8 +50,8 @@ def script_for(w):
     if w.get("origin"):
         lines.append(dict(cue="origin", text=f"Where does this word come from? {w['origin']}"))
     # "Miz" so the voice doesn't read "Ms." as the letters M-S; the caption still shows "Ms."
-    lines.append(dict(cue="outro", text=f"Try using {w['word']} today. See you tomorrow with Miz Lexi!",
-                      caption=f"Try using {w['word']} today. See you tomorrow with Ms. Lexi!"))
+    lines.append(dict(cue="outro", text=f"Try using {w['word']} today. I'm Miz Lexi. See you tomorrow!",
+                      caption=f"Try using {w['word']} today. I'm Ms. Lexi. See you tomorrow!"))
     return lines
 
 
