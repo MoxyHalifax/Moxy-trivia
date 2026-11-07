@@ -50,6 +50,11 @@ Tag someone who needs this one.
 That's week one! Tomorrow: a quick quiz on all 5 words. 🧠
 #wordoftheday #vocabulary #grade7 #grade8 #grade9 #middleschool #juniorhigh #albertateachers #studytips #homeschool
 
+### Sat Nov 14: Quiz Reel
+Quiz time! 🧠 How many of this week's words do you know?
+Pause and answer, then check the end. Comment your score 👇
+#wordoftheday #vocabulary #quiz #juniorhigh #albertateachers #middleschool
+
 ### Week 2 (Mon Nov 16): tenacious
 Word of the day: **tenacious** (tuh-NAY-shus) — refusing to give up.
 From Latin *tenere*, to hold. 🐶
@@ -59,11 +64,6 @@ From Latin *tenere*, to hold. 🐶
 Word of the day: **ubiquitous** (yoo-BIK-wih-tus) — found everywhere.
 Bonus points if your student spots something ubiquitous today. 📱
 #wordoftheday #vocabulary #grade7 #grade8 #grade9 #middleschool #juniorhigh #albertateachers #learnenglish #homeschool
-
-### Sat Nov 14: Quiz Reel
-Quiz time! 🧠 How many of this week's words do you know?
-Pause and answer, then check the end. Comment your score 👇
-#wordoftheday #vocabulary #quiz #juniorhigh #albertateachers #middleschool
 
 ---
 
