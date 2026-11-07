@@ -12,10 +12,20 @@
 ---
 
 ### Day 1: meticulous
-Word of the day: **meticulous** (muh-TIK-yuh-lus) — showing great attention to detail.
-Fun fact: it comes from the Latin word for *fear*. 🧐
-Ask your student to use it at dinner tonight.
-#wordoftheday #vocabulary #grade7 #grade8 #grade9 #middleschool #learnenglish #homeschool
+**Big words build confident kids. One a day, under a minute. 📚**
+
+Meet Ms. Lexi. Every day she teaches one grade 7–9 word: how to say it, what it means, how to use it, and where it comes from.
+
+Today's word: **meticulous** (muh-TIK-yuh-lus)
+👉 showing great attention to detail
+
+Fun fact: it comes from the Latin word for *fear*. It first meant being careful because you're afraid of getting it wrong.
+
+**Try this tonight:** ask your student to use *meticulous* at dinner. Teachers, it makes a great 60-second bell-ringer.
+
+Follow for a new word every day, and save this for later. 🔖
+
+#wordoftheday #vocabulary #grade7 #grade8 #grade9 #middleschool #teachersofinstagram #parentingtips
 
 ### Day 2: resilient
 Word of the day: **resilient** (rih-ZIL-yent) — able to bounce back after something hard happens.
