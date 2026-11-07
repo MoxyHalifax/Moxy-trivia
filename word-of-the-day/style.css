@@ -1,0 +1,71 @@
+:root {
+  --bg: #fdf6ec;
+  --ink: #222;
+  --board: #24443a;
+  --chalk: #f7f3e8;
+  --accent: #f2c14e;
+  --rose: #c2477a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink);
+  font-family: "Trebuchet MS", "Helvetica Neue", Arial, sans-serif;
+  display: flex; justify-content: center;
+}
+main { width: 100%; max-width: 900px; padding: 20px 16px 32px; }
+
+header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; }
+.brand { font-size: 26px; font-weight: 800; color: var(--rose); }
+.brand span { color: var(--ink); font-weight: 400; }
+.episode { font-size: 14px; color: #666; }
+
+.stage { display: grid; grid-template-columns: 260px 1fr; gap: 16px; align-items: end; margin-top: 16px; }
+
+/* Ms. Lexi */
+.lexi { width: 100%; height: auto; overflow: visible; }
+.body-bob { animation: bob 3.5s ease-in-out infinite; transform-origin: 150px 400px; }
+@keyframes bob { 50% { transform: translateY(-4px) rotate(-1deg); } }
+.eyes ellipse { transform-box: fill-box; transform-origin: center; animation: blink 4.5s infinite; }
+@keyframes blink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
+.talk { display: none; }
+.lexi.talking .talk { display: block; }
+.lexi.talking .smile { display: none; }
+.brows { transition: transform .3s; }
+.lexi.excited .brows { transform: translateY(-5px); }
+.arm { transform-origin: 215px 320px; transform: rotate(25deg); transition: transform .5s cubic-bezier(.3,1.6,.5,1); }
+.lexi.pointing .arm { transform: rotate(0deg); }
+
+/* Chalkboard */
+.board {
+  background: var(--board); color: var(--chalk); border: 12px solid #8a5a35; border-radius: 10px;
+  padding: 20px 24px; min-height: 360px; box-shadow: 0 6px 20px rgba(0,0,0,.15);
+  font-family: "Chalkboard SE", "Comic Sans MS", "Trebuchet MS", sans-serif;
+}
+.word { font-size: 44px; font-weight: 700; letter-spacing: 1px; color: var(--accent); min-height: 54px; }
+.say { font-size: 18px; opacity: .85; margin-bottom: 12px; min-height: 24px; }
+.part { opacity: 0; transform: translateY(8px); transition: opacity .5s, transform .5s; margin-top: 12px; }
+.part.show { opacity: 1; transform: none; }
+.part h3 { margin: 0 0 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); }
+.part p { margin: 0; font-size: 18px; line-height: 1.4; }
+.part.current p { text-decoration: underline wavy rgba(242,193,78,.5); text-underline-offset: 6px; }
+.pop { animation: pop .5s ease-out; }
+@keyframes pop { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.08); } 100% { transform: scale(1); opacity: 1; } }
+
+.caption {
+  margin: 16px 0; min-height: 52px; padding: 12px 16px; border-radius: 8px;
+  background: #fff; border-left: 5px solid var(--rose); font-size: 17px; line-height: 1.4;
+}
+.controls { display: flex; justify-content: center; gap: 10px; }
+button {
+  font: inherit; font-size: 18px; padding: 12px 18px; border: 2px solid var(--ink);
+  border-radius: 999px; background: #fff; cursor: pointer;
+}
+button.primary { background: var(--rose); color: #fff; border-color: var(--rose); min-width: 140px; font-weight: 700; }
+button:disabled { opacity: .35; cursor: default; }
+
+@media (max-width: 640px) {
+  .stage { grid-template-columns: 1fr; }
+  .lexi { max-width: 180px; margin: 0 auto -20px; display: block; }
+  .board { min-height: 0; }
+  .word { font-size: 34px; }
+}

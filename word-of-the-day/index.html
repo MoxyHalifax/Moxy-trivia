@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Word of the Day with Ms. Lexi</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <div class="brand">Word of the Day <span>with Ms. Lexi</span></div>
+      <div class="episode" id="episode"></div>
+    </header>
+
+    <div class="stage">
+      <!-- Ms. Lexi -->
+      <svg id="lexi" class="lexi" viewBox="0 0 300 400" aria-label="Ms. Lexi, the teacher">
+        <g class="body-bob">
+          <!-- hair behind -->
+          <ellipse cx="150" cy="165" rx="78" ry="92" fill="#3b2418"/>
+          <!-- body -->
+          <path d="M60 400 C60 320 95 290 150 290 C205 290 240 320 240 400 Z" fill="#2f6f8f"/>
+          <path d="M128 292 L150 330 L172 292 Z" fill="#f4efe6"/>
+          <rect x="136" y="232" width="28" height="44" rx="10" fill="#c98e6b"/>
+          <!-- head -->
+          <ellipse cx="150" cy="160" rx="58" ry="68" fill="#d9a07c"/>
+          <!-- ears + earrings -->
+          <ellipse cx="92" cy="165" rx="8" ry="13" fill="#c98e6b"/>
+          <ellipse cx="208" cy="165" rx="8" ry="13" fill="#c98e6b"/>
+          <circle cx="92" cy="183" r="4" fill="#f2c14e"/>
+          <circle cx="208" cy="183" r="4" fill="#f2c14e"/>
+          <!-- hair front + bun -->
+          <circle cx="150" cy="70" r="28" fill="#3b2418"/>
+          <path d="M90 150 C88 95 120 88 150 92 C185 88 214 100 210 150 C200 118 180 110 150 112 C125 110 100 118 90 150 Z" fill="#3b2418"/>
+          <!-- brows -->
+          <g class="brows">
+            <path d="M115 132 Q128 124 140 131" stroke="#3b2418" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <path d="M160 131 Q172 124 185 132" stroke="#3b2418" stroke-width="4" fill="none" stroke-linecap="round"/>
+          </g>
+          <!-- eyes -->
+          <g class="eyes">
+            <ellipse cx="128" cy="152" rx="6" ry="7" fill="#1d1d1d"/>
+            <ellipse cx="172" cy="152" rx="6" ry="7" fill="#1d1d1d"/>
+          </g>
+          <!-- glasses -->
+          <g stroke="#7a3b5e" stroke-width="3" fill="none">
+            <circle cx="128" cy="152" r="16"/>
+            <circle cx="172" cy="152" r="16"/>
+            <path d="M144 151 Q150 147 156 151"/>
+          </g>
+          <!-- cheeks + nose -->
+          <circle cx="115" cy="182" r="8" fill="#e8907a" opacity=".45"/>
+          <circle cx="185" cy="182" r="8" fill="#e8907a" opacity=".45"/>
+          <path d="M150 160 Q146 176 152 178" stroke="#b47a5a" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <!-- mouth: smile when quiet, moving mouth when talking -->
+          <path class="smile" d="M132 196 Q150 212 168 196" stroke="#8c2f39" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <ellipse id="talk" class="talk" cx="150" cy="200" rx="13" ry="4" fill="#8c2f39"/>
+        </g>
+        <!-- pointing arm -->
+        <g class="arm">
+          <path d="M215 320 C240 300 255 270 262 240" stroke="#2f6f8f" stroke-width="26" fill="none" stroke-linecap="round"/>
+          <circle cx="263" cy="232" r="14" fill="#d9a07c"/>
+          <rect x="260" y="200" width="7" height="22" rx="3.5" fill="#d9a07c"/>
+        </g>
+      </svg>
+
+      <!-- Chalkboard -->
+      <section class="board" aria-live="polite">
+        <div class="word" id="word"></div>
+        <div class="say" id="say"></div>
+        <div class="part" id="meaning"><h3>Meaning</h3><p></p></div>
+        <div class="part" id="sentence"><h3>In a sentence</h3><p></p></div>
+        <div class="part" id="origin"><h3>Where it comes from</h3><p></p></div>
+      </section>
+    </div>
+
+    <p class="caption" id="caption">Press play to meet today's word.</p>
+
+    <div class="controls">
+      <button id="prev" aria-label="Previous day">&larr;</button>
+      <button id="play" class="primary">&#9654; Play</button>
+      <button id="next" aria-label="Next day">&rarr;</button>
+    </div>
+  </main>
+
+  <script src="words.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
