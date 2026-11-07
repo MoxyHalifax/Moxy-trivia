@@ -62,25 +62,53 @@ body.render { overflow: hidden; }
 body.render .controls { display: none; }
 body.render .caption { flex-shrink: 0; }
 body.render main { max-width: none; padding: 32px 30px; }
-body.render-vertical main { width: 540px; height: 960px; display: flex; flex-direction: column; }
-body.render-vertical .brand { font-size: 28px; }
-body.render-vertical .stage { grid-template-columns: 1fr; gap: 0; }
-body.render-vertical .stage { flex: 1; display: flex; flex-direction: column; }
-body.render-vertical .lexi { width: 240px; max-width: none; margin: 0 auto -20px; display: block; position: relative; z-index: 1; }
-body.render-vertical .board { min-height: 0; flex: 1; padding: 18px 22px; }
-body.render-vertical .word { font-size: 48px; }
-body.render-vertical .say { font-size: 20px; }
-body.render-vertical .part h3 { font-size: 14px; }
-body.render-vertical .part p { font-size: 19px; }
-body.render-vertical .caption { font-size: 21px; margin: 16px 0 0; }
+/* Vertical (Instagram Reels / TikTok / Shorts). Padding keeps everything clear of
+   the app's own overlays: top bar, right-hand buttons, and the caption area at the bottom. */
+body.render-vertical main {
+  width: 540px; height: 960px; padding: 110px 66px 170px 28px;
+  display: grid; grid-template-columns: 140px 1fr; grid-template-rows: auto auto 1fr;
+  grid-template-areas: "head head" "lexi cap" "board board"; column-gap: 14px;
+}
+body.render-vertical header { grid-area: head; }
+body.render-vertical .brand { font-size: 24px; }
+body.render-vertical .stage { display: contents; }
+body.render-vertical .lexi { grid-area: lexi; width: 140px; margin: 6px 0 -14px; position: relative; z-index: 1; align-self: end; }
+body.render-vertical .board { grid-area: board; min-height: 0; overflow: hidden; padding: 16px 20px; border-width: 10px; }
+body.render-vertical .word { font-size: 40px; min-height: 48px; }
+body.render-vertical .say { font-size: 18px; margin-bottom: 4px; }
+body.render-vertical .part { margin-top: 10px; }
+body.render-vertical .part h3 { font-size: 12.5px; }
+body.render-vertical .caption {
+  grid-area: cap; align-self: center; position: relative; margin: 0; min-height: 0;
+  font-size: 18px; line-height: 1.35; padding: 12px 14px; border-left: 0; border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(0,0,0,.12);
+}
+body.render-vertical .caption::before {
+  content: ""; position: absolute; left: -12px; top: 50%; margin-top: -10px;
+  border: 10px solid transparent; border-right: 12px solid #fff; border-left: 0;
+}
+body.render .part p { font-size: var(--part-size, 18px); }
+
+/* Cover image (1080x1920; the profile grid shows the middle 1080x1440) */
+body.render-cover main { width: 540px; height: 960px; padding: 150px 36px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+body.render-cover header { flex-direction: column; align-items: center; gap: 2px; }
+body.render-cover .brand { font-size: 30px; text-align: center; }
+body.render-cover .brand span { display: block; font-size: 22px; }
+body.render-cover .episode { font-size: 16px; letter-spacing: 2px; text-transform: uppercase; color: var(--rose); font-weight: 700; }
+body.render-cover .stage { display: flex; flex-direction: column; align-items: center; width: 100%; gap: 0; margin: 0; }
+body.render-cover .lexi { width: 230px; max-width: none; margin: 0 auto -18px; position: relative; z-index: 1; }
+body.render-cover .board { width: 100%; min-height: 0; text-align: center; padding: 24px 16px 20px; }
+body.render-cover .word { font-size: 52px; transform: none !important; }
+body.render-cover .say { font-size: 22px; margin: 6px 0 0; }
+body.render-cover .part, body.render-cover .caption { display: none; }
 body.render-horizontal main { width: 960px; height: 540px; padding: 22px 30px; display: flex; flex-direction: column; }
 body.render-horizontal .stage { flex: 1; align-items: stretch; }
 body.render-horizontal .lexi { align-self: end; }
 body.render-horizontal .stage { grid-template-columns: 250px 1fr; margin-top: 8px; }
-body.render-horizontal .board { min-height: 0; padding: 14px 22px; }
+body.render-horizontal .board { min-height: 0; overflow: hidden; padding: 14px 22px; }
 body.render-horizontal .word { font-size: 42px; min-height: 0; }
 body.render-horizontal .say { font-size: 19px; }
 body.render-horizontal .say { margin-bottom: 4px; }
 body.render-horizontal .part { margin-top: 8px; }
-body.render-horizontal .part p { font-size: 18.5px; }
 body.render-horizontal .caption { font-size: 19px; margin: 12px 0 0; padding: 10px 16px; min-height: 0; }
+body.render-horizontal .stage { min-height: 0; grid-template-rows: minmax(0, 1fr); }

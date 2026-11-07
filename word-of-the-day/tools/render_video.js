@@ -3,9 +3,11 @@
 //   node tools/render_video.js            # today's episode, vertical + horizontal
 //   node tools/render_video.js 8 9 10     # specific episode numbers
 //   node tools/render_video.js all        # every word in words.js
+//   node tools/render_video.js 1-7 --formats vertical,cover   # a week for Instagram
 //
 // Writes videos/<episode>-<word>-vertical.mp4   (1080x1920, Reels / TikTok / Shorts)
 //        videos/<episode>-<word>-horizontal.mp4 (1920x1080, YouTube)
+//        videos/<episode>-<word>-cover.png      (1080x1920 cover image for Reels)
 // Needs: Node, Playwright with Chromium, ffmpeg, and audio from tools/make_audio.py.
 const { chromium } = require("playwright");
 const { spawn } = require("child_process");
@@ -16,7 +18,7 @@ const path = require("path");
 const ROOT = path.join(__dirname, "..");
 const OUT = path.join(ROOT, "videos");
 const FPS = 30;
-const FORMATS = { vertical: [540, 960], horizontal: [960, 540] }; // drawn at 2x
+const FORMATS = { vertical: [540, 960], horizontal: [960, 540], cover: [540, 960] }; // drawn at 2x
 
 // Read the word list the same way the page does
 const WORDS = new Function(fs.readFileSync(path.join(ROOT, "words.js"), "utf8") + "; return WORDS;")();
@@ -26,7 +28,10 @@ const today = Math.max(1, Math.floor((new Date(new Date().toDateString()) - STAR
 function episodesFromArgs(args) {
   if (!args.length) return [today];
   if (args[0] === "all") return WORDS.map((_, i) => i + 1);
-  return args.map(Number).filter((n) => n > 0);
+  return args.flatMap((a) => {
+    const [from, to] = a.split("-").map(Number);
+    return to ? Array.from({ length: to - from + 1 }, (_, i) => from + i) : [from];
+  }).filter((n) => n > 0);
 }
 
 function serve() {
@@ -48,7 +53,14 @@ async function renderOne(browser, port, ep, format) {
   await page.evaluate(() => document.fonts.ready);
   if (!info.duration) { await page.close(); throw new Error(`no audio for "${info.word}" - run tools/make_audio.py first`); }
 
-  const name = `${String(ep).padStart(3, "0")}-${info.word}-${format}.mp4`;
+  const base = `${String(ep).padStart(3, "0")}-${info.word}-${format}`;
+  if (format === "cover") {
+    await page.evaluate(() => window.__cover());
+    await page.screenshot({ path: path.join(OUT, base + ".png") });
+    await page.close();
+    return console.log(`  ${base}.png  done`);
+  }
+  const name = base + ".mp4";
   const outFile = path.join(OUT, name);
   const ff = spawn("ffmpeg", ["-y", "-loglevel", "error",
     "-f", "image2pipe", "-framerate", String(FPS), "-i", "-",
@@ -76,8 +88,11 @@ async function renderOne(browser, port, ep, format) {
   const server = await serve();
   const browser = await chromium.launch();
   try {
-    for (const ep of episodesFromArgs(process.argv.slice(2)))
-      for (const format of Object.keys(FORMATS)) await renderOne(browser, server.address().port, ep, format);
+    const args = process.argv.slice(2);
+    const fi = args.indexOf("--formats");
+    const formats = fi >= 0 ? args.splice(fi, 2)[1].split(",") : ["vertical", "horizontal"];
+    for (const ep of episodesFromArgs(args))
+      for (const format of formats) await renderOne(browser, server.address().port, ep, format);
   } finally {
     await browser.close();
     server.close();

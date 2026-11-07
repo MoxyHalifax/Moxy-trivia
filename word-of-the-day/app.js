@@ -94,10 +94,60 @@ function render(t, clock) {
   }
   for (const id of ["meaning", "sentence", "origin"]) $(id).classList.toggle("current", $(id) === current && t < tOutro);
 
-  // caption: the line she's on (or the last one she said)
+  // caption: the part of the line she's saying now, in short subtitle-sized chunks
   let cap = mode === "idle" ? "Press play to meet today's word." : "";
-  for (const l of lines) if (t >= l.t0 - 0.05) cap = l.caption;
+  for (const l of lines) {
+    if (t < l.t0 - 0.05) break;
+    const parts = chunks(l.caption);
+    const total = parts.reduce((n, c) => n + c.length, 0);
+    let start = l.t0;
+    cap = parts[0];
+    for (const c of parts) {
+      if (t >= start - 0.05) cap = c;
+      start += ((l.t1 - l.t0) * c.length) / total;
+    }
+  }
   $("caption").textContent = cap;
+}
+
+// Split a long line into subtitle chunks of roughly 90 characters, at sentence or comma breaks
+const chunkCache = new Map();
+function chunks(text, max = 90) {
+  if (chunkCache.has(text)) return chunkCache.get(text);
+  const out = [];
+  for (const sentence of text.split(/(?<=[.!?])\s+/)) {
+    let pieces = [sentence];
+    if (sentence.length > max) {
+      pieces = [];
+      let cur = "";
+      for (const word of sentence.split(" ")) {
+        if (cur && (cur + " " + word).length > max * 0.8 && /[,;:]$/.test(cur)) { pieces.push(cur); cur = word; }
+        else if (cur && (cur + " " + word).length > max) { pieces.push(cur); cur = word; }
+        else cur = cur ? cur + " " + word : word;
+      }
+      if (cur) pieces.push(cur);
+    }
+    for (const piece of pieces) {
+      const last = out[out.length - 1];
+      if (last && last.length + piece.length + 1 <= max * 0.75) out[out.length - 1] = last + " " + piece;
+      else out.push(piece);
+    }
+  }
+  chunkCache.set(text, out);
+  return out;
+}
+
+// Video layouts have a fixed-size board: shrink the text until the longest episode fits
+function fitBoard() {
+  const board = document.querySelector(".board");
+  const w = wordFor(episode);
+  $("word").textContent = w.word; $("say").textContent = `${w.say} · ${w.pos}`;
+  let size = renderFormat === "horizontal" ? 18.5 : 18;
+  board.style.setProperty("--part-size", size + "px");
+  while (board.scrollHeight > board.clientHeight + 1 && size > 12) {
+    size -= 0.5;
+    board.style.setProperty("--part-size", size + "px");
+  }
 }
 
 // ---- Loading an episode ----
@@ -154,8 +204,13 @@ $("next").addEventListener("click", () => { episode++; load(); });
 // ---- Video export hooks (used by tools/render_video.js) ----
 if (renderFormat) {
   document.body.classList.add("render", `render-${renderFormat}`);
-  window.__ready = load().then(() => ({ word: wordFor(episode).word, duration: data && data.duration }));
+  window.__ready = load().then(() => document.fonts.ready).then(() => {
+    if (renderFormat !== "cover") fitBoard();
+    return { word: wordFor(episode).word, duration: data && data.duration };
+  });
   window.__render = (t) => { mode = "playing"; render(t, t); };
+  // Cover image: word and pronunciation on the board, Ms. Lexi pointing at it
+  window.__cover = () => { mode = "idle"; render(cueTime("meaning") - 0.2, 0.7); };
 } else {
   load();
   requestAnimationFrame(tick);
