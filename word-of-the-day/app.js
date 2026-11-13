@@ -6,6 +6,15 @@
 const START_DATE = new Date(2026, 10, 1); // Nov 1, 2026 (months start at 0)
 const HANDLE = "@wordswithmslexi"; // shown on exported videos and covers
 
+// Ms. Lexi's sweater changes colour each week to keep the feed fresh.
+// Episodes 1-12 (through Nov 20) wear the original teal; from episode 13 a new
+// colour every 5 episodes, cycling through this list. ?sweater=%23hex overrides it.
+const ORIGINAL_SWEATER = "#2f6f8f";
+const SWEATERS = ["#d9694f", "#2e3f6e", "#c9952b", "#8c2f45", "#6f5aa8", ORIGINAL_SWEATER]; // coral, navy, mustard, burgundy, lavender, teal
+function sweaterFor(ep) {
+  return ep < 13 ? ORIGINAL_SWEATER : SWEATERS[Math.floor((ep - 13) / 5) % SWEATERS.length];
+}
+
 const $ = (id) => document.getElementById(id);
 const audio = $("audio");
 const playBtn = $("play");
@@ -161,6 +170,7 @@ async function load() {
   data = null; mode = "idle";
   audio.pause();
   playBtn.textContent = "▶ Play"; playBtn.disabled = true;
+  document.documentElement.style.setProperty("--sweater", params.get("sweater") || sweaterFor(episode));
   $("episode").textContent = renderFormat
     ? `${HANDLE} · Episode ${episode}`
     : `Episode ${episode}` + (episode === todayEp ? " · Today" : "");

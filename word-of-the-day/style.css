@@ -23,6 +23,8 @@ header { display: flex; justify-content: space-between; align-items: baseline; f
 
 /* Ms. Lexi (all her movement is driven from app.js so video frames match playback) */
 .lexi { width: 100%; height: auto; overflow: visible; }
+.lexi .sweater { fill: var(--sweater, #2f6f8f); }
+.lexi .sweater-line { stroke: var(--sweater, #2f6f8f); }
 
 /* Chalkboard */
 .board {
