@@ -2,11 +2,12 @@
 
 Schedule: a new word Sunday–Thursday, a quiz on Friday, Saturdays off.
 Each post: the `-vertical.mp4` Reel, the matching `-cover.png`, AI label on.
+Test this week: every Reel opens with an everyday moment (week 1 showed these got ~60% more views).
 Captions are Psych Checked (surprise first, the outcome parents and teachers want, one ask) and ready to paste.
 
 ### Sun Nov 15: serendipity
 ```
-This word was invented in 1754, inspired by a fairy tale. 🏰
+Ever found something great you weren't even looking for? There's a word for that. 🍀
 
 Today's word: serendipity (sair-en-DIP-ih-tee)
 👉 finding something good by lucky chance
@@ -70,7 +71,7 @@ Follow so you don't miss tomorrow's word. 📚
 
 ### Thu Nov 19: scrutinize
 ```
-This word might come from digging through a pile of junk. 🔍
+Ever read your work three times and still missed a mistake? This word can help. 🔍
 
 Today's word: scrutinize (SKROO-tih-nize)
 👉 to look at something very closely and carefully
