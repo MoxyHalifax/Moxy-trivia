@@ -119,3 +119,20 @@ body.render-vertical header { flex-direction: column; align-items: flex-start; g
 body.render-vertical .episode { font-size: 15px; }
 body.render-horizontal .episode { font-size: 16px; }
 body.render-cover .episode { text-transform: none; letter-spacing: .5px; font-size: 17px; }
+
+/* Friday quiz Reel */
+body.quiz .word, body.quiz .say, body.quiz .part { display: none; }
+#quizbox { display: flex; flex-direction: column; gap: 14px; height: 100%; }
+#quizbox[hidden] { display: none; }
+.qlabel { font-size: 14px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+.qdef { font-size: 26px; line-height: 1.3; min-height: 2.6em; }
+.qopts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; counter-reset: q; }
+.qopts li { counter-increment: q; border: 2px solid rgba(247,243,232,.35); border-radius: 10px; padding: 10px 14px; font-size: 22px; font-weight: 700; transition: none; }
+.qopts li::before { content: counter(q, upper-alpha) ".  "; color: var(--accent); }
+.qopts li.right { background: #3f8f5a; border-color: #8fe0a8; }
+.qopts li.dim { opacity: .35; }
+.qcount { font-size: 64px; font-weight: 800; color: var(--accent); text-align: center; min-height: 1.1em; }
+.qbig { font-size: 52px; font-weight: 800; color: var(--accent); text-align: center; margin-top: 40px; }
+body.render-cover #quizbox { height: auto; gap: 6px; padding-block: 6px; }
+body.render-cover .qopts, body.render-cover .qcount { display: none; }
+body.render-cover .qbig { margin-top: 10px; }

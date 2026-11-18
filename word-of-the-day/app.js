@@ -20,6 +20,7 @@ const audio = $("audio");
 const playBtn = $("play");
 const params = new URLSearchParams(location.search);
 const renderFormat = params.get("render"); // "vertical" | "horizontal" when exporting video
+const quizId = params.get("quiz");          // e.g. "week2": play a Friday quiz instead of a word
 const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const todayEp = Math.max(1, Math.floor((startOfDay(new Date()) - START_DATE) / 864e5) + 1);
@@ -52,7 +53,7 @@ function render(t, clock) {
 
   if (!data) return;
   const lines = data.lines;
-  const tWord = cueTime("word"), tOutro = cueTime("outro"), tSay = cueTime("say");
+  const tWord = quizId ? cueTime("q1") : cueTime("word"), tOutro = cueTime("outro"), tSay = cueTime("say");
 
   // pose
   const point = ease((t - tWord) / 0.5) * (1 - ease((t - tOutro) / 0.5));
@@ -89,7 +90,38 @@ function render(t, clock) {
     $("tongue").setAttribute("rx", rx * 0.6);
   }
 
-  // board
+  if (quizId) renderQuiz(t);
+  else renderBoard(t, w, lines, tWord, tSay, tOutro);
+  renderCaption(t, lines);
+}
+
+// Friday quiz: question, three options, a countdown, then the answer lights up
+function renderQuiz(t) {
+  const qs = data.questions;
+  let i = -1;
+  qs.forEach((_, n) => { if (t >= cueTime(`q${n + 1}`)) i = n; });
+  const tOutro = cueTime("outro");
+  if (i < 0 || t >= tOutro) {
+    $("qlabel").textContent = i < 0 ? "Friday quiz" : "Final score?";
+    $("qdef").innerHTML = i < 0 ? '<div class="qbig">Quiz time! 🧠</div>' : '<div class="qbig">Comment your score! 👇</div>';
+    $("qopts").style.visibility = "hidden"; $("qcount").textContent = "";
+    return;
+  }
+  const q = qs[i], tq = cueTime(`q${i + 1}`), ta = cueTime(`a${i + 1}`);
+  const qEnd = data.lines.find((l) => l.cue === `q${i + 1}`).t1;
+  $("qlabel").textContent = `Question ${i + 1} of ${qs.length}`;
+  $("qdef").textContent = `Which word means "${q.definition}"?`;
+  $("qopts").style.visibility = "visible";
+  [...$("qopts").children].forEach((li, n) => {
+    li.textContent = q.options[n];
+    li.classList.toggle("right", t >= ta && n === q.answer);
+    li.classList.toggle("dim", t >= ta && n !== q.answer);
+    li.style.opacity = t >= ta ? "" : clamp((t - tq - 0.3 * n) / 0.4);
+  });
+  $("qcount").textContent = t >= qEnd && t < ta ? Math.max(1, Math.ceil(ta - t)) : "";
+}
+
+function renderBoard(t, w, lines, tWord, tSay, tOutro) {
   const p = clamp((t - tWord) / 0.5);
   // during the hook the board shows a mystery "?" until the word is revealed
   $("word").textContent = t >= tWord ? w.word : (mode !== "idle" && t >= lines[0].t0 ? "?" : "");
@@ -106,7 +138,9 @@ function render(t, clock) {
     if (t >= tc) current = el;
   }
   for (const id of ["meaning", "sentence", "origin"]) $(id).classList.toggle("current", $(id) === current && t < tOutro);
+}
 
+function renderCaption(t, lines) {
   // caption: the part of the line she's saying now, in short subtitle-sized chunks
   let cap = mode === "idle" ? "Press play to meet today's word." : "";
   for (const l of lines) {
@@ -171,7 +205,10 @@ async function load() {
   audio.pause();
   playBtn.textContent = "▶ Play"; playBtn.disabled = true;
   document.documentElement.style.setProperty("--sweater", params.get("sweater") || sweaterFor(episode));
-  $("episode").textContent = renderFormat
+  if (quizId) { document.body.classList.add("quiz"); $("quizbox").hidden = false; }
+  $("episode").textContent = quizId
+    ? `${HANDLE} · Friday quiz`
+    : renderFormat
     ? `${HANDLE} · Episode ${episode}`
     : `Episode ${episode}` + (episode === todayEp ? " · Today" : "");
   $("prev").disabled = episode <= 1;
@@ -183,12 +220,13 @@ async function load() {
   $("origin").querySelector("p").textContent = w.origin || "";
   $("origin").style.display = w.origin ? "" : "none";
   try {
-    const res = await fetch(`episodes/${encodeURIComponent(w.word)}.json`);
+    const name = quizId ? `quiz-${quizId}` : w.word;
+    const res = await fetch(`episodes/${encodeURIComponent(name)}.json`);
     if (!res.ok) throw new Error();
     const d = await res.json();
     if (my !== loadId) return;
     data = d;
-    audio.src = `episodes/${encodeURIComponent(w.word)}.mp3`;
+    audio.src = `episodes/${encodeURIComponent(name)}.mp3`;
     playBtn.disabled = false;
     render(0, performance.now() / 1000);
   } catch {
@@ -221,12 +259,12 @@ $("next").addEventListener("click", () => { episode++; load(); });
 if (renderFormat) {
   document.body.classList.add("render", `render-${renderFormat}`);
   window.__ready = load().then(() => document.fonts.ready).then(() => {
-    if (renderFormat !== "cover") fitBoard();
-    return { word: wordFor(episode).word, duration: data && data.duration };
+    if (renderFormat !== "cover" && !quizId) fitBoard();
+    return { word: quizId ? `quiz-${quizId}` : wordFor(episode).word, duration: data && data.duration };
   });
   window.__render = (t) => { mode = "playing"; render(t, t); };
   // Cover image: word and pronunciation on the board, Ms. Lexi pointing at it
-  window.__cover = () => { mode = "idle"; render(cueTime("meaning") - 0.2, 0.7); };
+  window.__cover = () => { mode = "idle"; render(quizId ? 1 : cueTime("meaning") - 0.2, 0.7); };
 } else {
   load();
   requestAnimationFrame(tick);

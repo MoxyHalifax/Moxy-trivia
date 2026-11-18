@@ -4,6 +4,7 @@
 //   node tools/render_video.js 8 9 10     # specific episode numbers
 //   node tools/render_video.js all        # every word in words.js
 //   node tools/render_video.js 1-7 --formats vertical,cover   # a week for Instagram
+//   node tools/render_video.js quiz-week2 --formats vertical,cover   # Friday quiz
 //
 // Writes videos/<episode>-<word>-vertical.mp4   (1080x1920, Reels / TikTok / Shorts)
 //        videos/<episode>-<word>-horizontal.mp4 (1920x1080, YouTube)
@@ -29,9 +30,10 @@ function episodesFromArgs(args) {
   if (!args.length) return [today];
   if (args[0] === "all") return WORDS.map((_, i) => i + 1);
   return args.flatMap((a) => {
+    if (a.startsWith("quiz-")) return [a];
     const [from, to] = a.split("-").map(Number);
     return to ? Array.from({ length: to - from + 1 }, (_, i) => from + i) : [from];
-  }).filter((n) => n > 0);
+  }).filter((n) => typeof n === "string" || n > 0);
 }
 
 function serve() {
@@ -48,12 +50,13 @@ function serve() {
 async function renderOne(browser, port, ep, format) {
   const [w, h] = FORMATS[format];
   const page = await browser.newPage({ viewport: { width: w, height: h }, deviceScaleFactor: 2 });
-  await page.goto(`http://localhost:${port}/index.html?render=${format}&ep=${ep}`);
+  const q = String(ep).startsWith("quiz-") ? `quiz=${ep.slice(5)}&ep=1` : `ep=${ep}`;
+  await page.goto(`http://localhost:${port}/index.html?render=${format}&${q}`);
   const info = await page.evaluate(() => window.__ready);
   await page.evaluate(() => document.fonts.ready);
   if (!info.duration) { await page.close(); throw new Error(`no audio for "${info.word}" - run tools/make_audio.py first`); }
 
-  const base = `${String(ep).padStart(3, "0")}-${info.word}-${format}`;
+  const base = String(ep).startsWith("quiz-") ? `${ep}-${format}` : `${String(ep).padStart(3, "0")}-${info.word}-${format}`;
   if (format === "cover") {
     await page.evaluate(() => window.__cover());
     await page.screenshot({ path: path.join(OUT, base + ".png") });

@@ -80,9 +80,13 @@ def mouth_data(audio):
 
 
 def make(k, w):
+    build(k, w["word"], script_for(w), extra=dict(word=w["word"]))
+
+
+def build(k, name, script, extra):
     parts, lines, t = [], [], 0.15  # tiny breath so the first word isn't clipped
     parts.append(np.zeros(int(0.15 * SR), dtype=np.float32))
-    for ln in script_for(w):
+    for ln in script:
         gap = ln.get("gap", 0.35)
         parts.append(np.zeros(int(gap * SR), dtype=np.float32)); t += gap
         audio, sr = k.create(ln["text"], voice=VOICE, speed=ln.get("speed", 1.0), lang="en-us")
@@ -96,18 +100,48 @@ def make(k, w):
     full = full / (np.abs(full).max() + 1e-9) * 0.9
     openness, wide = mouth_data(full)
 
-    base = os.path.join(OUT, w["word"])
+    base = os.path.join(OUT, name)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1",
                     "-i", "-", "-c:a", "libmp3lame", "-b:a", "64k", base + ".mp3"],
                    input=full.tobytes(), check=True)
     with open(base + ".json", "w") as f:
-        json.dump(dict(word=w["word"], voice=VOICE, fps=FPS, duration=round(len(full) / SR, 3),
+        json.dump(dict(**extra, voice=VOICE, fps=FPS, duration=round(len(full) / SR, 3),
                        lines=lines, open=openness, wide=wide), f, separators=(",", ":"))
-    print(f"  {w['word']}: {len(full) / SR:.1f}s")
+    print(f"  {name}: {len(full) / SR:.1f}s")
+
+
+def make_quiz(k, quiz_id, words):
+    """Friday quiz Reel: 'Which word means ...?', a 3-second countdown, then the answer."""
+    q = QUIZZES[quiz_id]
+    by_word = {w["word"]: w for w in words}
+    picks = [by_word[x] for x in q["words"]]
+    script, questions = [dict(cue="intro", text="Quiz time! How many of this week's words do you know? Pause the video if you need more time.", gap=0)], []
+    for i, w in enumerate(picks):
+        others = [p["word"] for p in picks if p is not w]
+        wrong = [others[(i + 1) % len(others)], others[(i + 3) % len(others)]]
+        options = wrong[:]
+        options.insert(i % 3, w["word"])  # correct answer moves between A, B and C
+        questions.append(dict(definition=w["definition"], options=options, answer=options.index(w["word"])))
+        script.append(dict(cue=f"q{i + 1}", text=f"Number {i + 1}. Which word means {w['definition']}?",
+                           caption=f"Number {i + 1}: which word means \"{w['definition']}\"?"))
+        script.append(dict(cue=f"a{i + 1}", text=f"It's {w['word']}!", gap=3.2))  # gap = countdown
+    script.append(dict(cue="outro", text=f"How did you do? Comment your score! I'm Miz Lexi. See you {q['next']}!",
+                       caption=f"How did you do? Comment your score! I'm Ms. Lexi. See you {q['next']}!"))
+    build(k, f"quiz-{quiz_id}", script, extra=dict(quiz=quiz_id, questions=questions))
+
+
+QUIZZES = {
+    # Friday quiz Reels: which words, and when she's back (Saturdays off)
+    "week2": dict(words=["serendipity", "candid", "lethargic", "eloquent", "scrutinize"], next="Sunday"),
+}
 
 
 def main():
     args = sys.argv[1:]
+    if "--quiz" in args:
+        k = Kokoro(os.path.join(MODEL_DIR, "kokoro.onnx"), os.path.join(MODEL_DIR, "voices.bin"))
+        make_quiz(k, args[args.index("--quiz") + 1], load_words())
+        return
     force = "--force" in args
     only = [a for a in args if not a.startswith("--")]
     os.makedirs(OUT, exist_ok=True)
