@@ -133,6 +133,7 @@ def make_quiz(k, quiz_id, words):
 QUIZZES = {
     # Friday quiz Reels: which words, and when she's back (Saturdays off)
     "week2": dict(words=["serendipity", "candid", "lethargic", "eloquent", "scrutinize"], next="Sunday"),
+    "week3": dict(words=["curfew", "quarantine", "gregarious", "empathy", "inevitable"], next="Sunday"),
 }
 
 
